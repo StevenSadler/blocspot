@@ -44,6 +44,14 @@ public abstract class Table {
         return cursor.getLong(columnIndex);
     }
 
+    protected static float getFloat(Cursor cursor, String column) {
+        int columnIndex = cursor.getColumnIndex(column);
+        if (columnIndex == -1) {
+            return Float.NaN;
+        }
+        return cursor.getFloat(columnIndex);
+    }
+
     protected static boolean getBoolean(Cursor cursor, String column) {
         return getLong(cursor, column) == 1l;
     }

@@ -54,6 +54,8 @@ public class DataSource {
         new PointOfInterestTable.Builder()
                 .setTitle(pointOfInterest.getTitle())
                 .setGUID(pointOfInterest.getGuid())
+                .setLatitude(pointOfInterest.getLatitude())
+                .setLongitude(pointOfInterest.getLongitude())
                 .insert(writableDatabase);
     }
 
@@ -62,8 +64,11 @@ public class DataSource {
     }
 
     public static PointOfInterest pointOfInterestFromCursor(Cursor cursor) {
-        return new PointOfInterest(PointOfInterestTable.getGUID(cursor),
-                PointOfInterestTable.getTitle(cursor));
+        return new PointOfInterest()
+                .setGuid(PointOfInterestTable.getGUID(cursor))
+                .setTitle(PointOfInterestTable.getTitle(cursor))
+                .setLatitude(PointOfInterestTable.getLatitude(cursor))
+                .setLongitude(PointOfInterestTable.getLongitude(cursor));
     }
 
     public void createTestData(Context context) {
@@ -75,9 +80,24 @@ public class DataSource {
 //        }
         mPointsOfInterest.add(new PointOfInterest());
         mPointsOfInterest.add(new PointOfInterest());
-        mPointsOfInterest.add(new PointOfInterest("guid1", "title1"));
-        mPointsOfInterest.add(new PointOfInterest("guid2", "title2"));
-        mPointsOfInterest.add(new PointOfInterest("guid3", "title3"));
+        mPointsOfInterest.add(new PointOfInterest()
+                .setGuid("guid1")
+                .setTitle("title 1")
+                .setLatitude(38f)
+                .setLongitude(-122f));
+        mPointsOfInterest.add(new PointOfInterest()
+                .setGuid("guid2")
+                .setTitle("title 2")
+                .setLatitude(38f)
+                .setLongitude(-121f));
+        mPointsOfInterest.add(new PointOfInterest()
+                .setGuid("guid3")
+                .setTitle("title 3")
+                .setLatitude(38f)
+                .setLongitude(-120f));
+//        mPointsOfInterest.add(new PointOfInterest("guid1", "title1", 38f, -122f));
+//        mPointsOfInterest.add(new PointOfInterest("guid2", "title2", 38f, -121f));
+//        mPointsOfInterest.add(new PointOfInterest("guid3", "title3", 38f, -120f));
 
         Log.d(TAG, "createTestData end");
     }

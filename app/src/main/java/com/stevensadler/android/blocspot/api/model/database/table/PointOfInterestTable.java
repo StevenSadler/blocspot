@@ -23,6 +23,16 @@ public class PointOfInterestTable extends Table {
             return this;
         }
 
+        public Builder setLatitude(float latitude) {
+            values.put(COLUMN_LATITUDE, latitude);
+            return this;
+        }
+
+        public Builder setLongitude(float longitude) {
+            values.put(COLUMN_LONGITUDE, longitude);
+            return this;
+        }
+
         @Override
         public long insert(SQLiteDatabase writeableDB) {
             return writeableDB.insert(NAME, null, values);
@@ -35,11 +45,19 @@ public class PointOfInterestTable extends Table {
     public static String getTitle(Cursor cursor) {
         return getString(cursor, COLUMN_TITLE);
     }
+    public static float getLatitude(Cursor cursor) {
+        return getFloat(cursor, COLUMN_LATITUDE);
+    }
+    public static float getLongitude(Cursor cursor) {
+        return getFloat(cursor, COLUMN_LONGITUDE);
+    }
 
     private static final String NAME = "points_of_interest";
 
     private static final String COLUMN_GUID = "guid";
     private static final String COLUMN_TITLE = "title";
+    private static final String COLUMN_LATITUDE = "latitude";
+    private static final String COLUMN_LONGITUDE = "longitude";
 
     @Override
     public String getName() {
@@ -51,7 +69,9 @@ public class PointOfInterestTable extends Table {
         return "CREATE TABLE " + getName() + " ("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_GUID + " TEXT,"
-                + COLUMN_TITLE + " TEXT)";
+                + COLUMN_TITLE + " TEXT,"
+                + COLUMN_LATITUDE + " REAL,"
+                + COLUMN_LONGITUDE + " REAL)";
     }
 
     public Cursor fetchAll(SQLiteDatabase readonlyDatabase) {

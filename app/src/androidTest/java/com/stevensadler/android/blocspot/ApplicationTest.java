@@ -14,9 +14,12 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
 
     private static String TEST_GUID = "test_guid";
     private static String TEST_TITLE = "test_title";
+    private static float TEST_LATITUDE = 37f;
+    private static float TEST_LONGITUDE = -121f;
 
     private PointOfInterest emptyPOI;
     private PointOfInterest testPOI;
+    private BlocspotApplication application;
     private DataSource dataSource;
 
     public ApplicationTest() {
@@ -29,8 +32,16 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
         setContext(new RenamingDelegatingContext(getContext(), "test_"));
         createApplication();
 
+//        application = getApplication();
+//        application.onCreate();
+//        dataSource = application.getDataSource();
+
         emptyPOI = new PointOfInterest();
-        testPOI = new PointOfInterest(TEST_GUID, TEST_TITLE);
+        testPOI = new PointOfInterest()
+                .setGuid(TEST_GUID)
+                .setTitle(TEST_TITLE)
+                .setLatitude(TEST_LATITUDE)
+                .setLongitude(TEST_LONGITUDE);
     }
 
     /*
@@ -62,6 +73,12 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
     public void testCreateEmptyPOIHasDefaultTitle() {
         assertEquals(PointOfInterest.DEFAULT_TITLE, emptyPOI.getTitle());
     }
+    public void testCreateEmptyPOIHasDefaultLatitude() {
+        assertEquals(PointOfInterest.DEFAULT_LATITUDE, emptyPOI.getLatitude());
+    }
+    public void testCreateEmptyPOIHasDefaultLongitude() {
+        assertEquals(PointOfInterest.DEFAULT_LONGITUDE, emptyPOI.getLongitude());
+    }
 
     public void testCreatePOI() {
         assertNotNull(testPOI);
@@ -71,6 +88,12 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
     }
     public void testCreatePOIHasTestTitle() {
         assertEquals(TEST_TITLE, testPOI.getTitle());
+    }
+    public void testCreatePOIHasTestLatitude() {
+        assertEquals(TEST_LATITUDE, testPOI.getLatitude());
+    }
+    public void testCreatePOIHasTestLongitude() {
+        assertEquals(TEST_LONGITUDE, testPOI.getLongitude());
     }
 
     /*

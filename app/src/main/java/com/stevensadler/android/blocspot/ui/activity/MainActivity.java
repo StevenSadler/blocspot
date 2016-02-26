@@ -1,36 +1,56 @@
 package com.stevensadler.android.blocspot.ui.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.stevensadler.android.blocspot.R;
-import com.stevensadler.android.blocspot.ui.BlocspotApplication;
+import com.stevensadler.android.blocspot.ui.adapter.ViewPagerAdapter;
+import com.stevensadler.android.blocspot.ui.fragment.BlocspotMapFragment;
+import com.stevensadler.android.blocspot.ui.fragment.ItemListFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Toolbar mToolbar;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-                BlocspotApplication.getSharedDataSource().testDatabase();
-            }
-        });
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(mViewPager);
+
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+
+//       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//
+//                BlocspotApplication.getSharedDataSource().testDatabase();
+//            }
+//        });
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new ItemListFragment(), "List");
+        adapter.addFragment(new BlocspotMapFragment(), "Map");
+        viewPager.setAdapter(adapter);
     }
 
     @Override
