@@ -32,9 +32,9 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
         setContext(new RenamingDelegatingContext(getContext(), "test_"));
         createApplication();
 
-//        application = getApplication();
-//        application.onCreate();
-//        dataSource = application.getDataSource();
+        application = getApplication();
+        application.onCreate();
+        dataSource = application.getDataSource();
 
         emptyPOI = new PointOfInterest();
         testPOI = new PointOfInterest()
@@ -48,9 +48,9 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
      * BlocspotApplication
      */
     public void testApplicationHasDataSource() {
-        BlocspotApplication application = getApplication();
-        application.onCreate();
-        dataSource = application.getDataSource();
+//        BlocspotApplication application = getApplication();
+//        application.onCreate();
+//        dataSource = application.getDataSource();
         assertNotNull(dataSource);
     }
 
@@ -79,22 +79,22 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
     public void testCreateEmptyPOIHasDefaultLongitude() {
         assertEquals(PointOfInterest.DEFAULT_LONGITUDE, emptyPOI.getLongitude());
     }
-
-    public void testCreatePOI() {
-        assertNotNull(testPOI);
-    }
-    public void testCreatePOIHasTestGuid() {
-        assertEquals(TEST_GUID, testPOI.getGuid());
-    }
-    public void testCreatePOIHasTestTitle() {
-        assertEquals(TEST_TITLE, testPOI.getTitle());
-    }
-    public void testCreatePOIHasTestLatitude() {
-        assertEquals(TEST_LATITUDE, testPOI.getLatitude());
-    }
-    public void testCreatePOIHasTestLongitude() {
-        assertEquals(TEST_LONGITUDE, testPOI.getLongitude());
-    }
+//
+//    public void testCreatePOI() {
+//        assertNotNull(testPOI);
+//    }
+//    public void testCreatePOIHasTestGuid() {
+//        assertEquals(TEST_GUID, testPOI.getGuid());
+//    }
+//    public void testCreatePOIHasTestTitle() {
+//        assertEquals(TEST_TITLE, testPOI.getTitle());
+//    }
+//    public void testCreatePOIHasTestLatitude() {
+//        assertEquals(TEST_LATITUDE, testPOI.getLatitude());
+//    }
+//    public void testCreatePOIHasTestLongitude() {
+//        assertEquals(TEST_LONGITUDE, testPOI.getLongitude());
+//    }
 
     /*
      * PointOfInterestTable

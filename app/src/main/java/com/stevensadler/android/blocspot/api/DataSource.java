@@ -38,10 +38,6 @@ public class DataSource {
                 SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
 
                for (PointOfInterest pointOfInterest : mPointsOfInterest) {
-//                   new PointOfInterestTable.Builder()
-//                           .setTitle(pointOfInterest.getTitle())
-//                           .insert(writableDatabase);
-
                    insertPointOfInterest(pointOfInterest);
                }
                 Log.d(TAG, "constructor thread inner run complete");
@@ -72,12 +68,8 @@ public class DataSource {
     }
 
     public void createTestData(Context context) {
-        context.deleteDatabase("blocspot_db");
+        //context.deleteDatabase("blocspot_db");
 
-//        for (int i = 0; i < 10; i++) {
-//            mPointsOfInterest.add(new PointOfInterest(String.valueOf(i),
-//                    "a Point of Interest #" + i));
-//        }
         mPointsOfInterest.add(new PointOfInterest());
         mPointsOfInterest.add(new PointOfInterest());
         mPointsOfInterest.add(new PointOfInterest()
@@ -88,16 +80,13 @@ public class DataSource {
         mPointsOfInterest.add(new PointOfInterest()
                 .setGuid("guid2")
                 .setTitle("title 2")
-                .setLatitude(38f)
-                .setLongitude(-121f));
+                .setLatitude(37f)
+                .setLongitude(-122f));
         mPointsOfInterest.add(new PointOfInterest()
                 .setGuid("guid3")
                 .setTitle("title 3")
-                .setLatitude(38f)
-                .setLongitude(-120f));
-//        mPointsOfInterest.add(new PointOfInterest("guid1", "title1", 38f, -122f));
-//        mPointsOfInterest.add(new PointOfInterest("guid2", "title2", 38f, -121f));
-//        mPointsOfInterest.add(new PointOfInterest("guid3", "title3", 38f, -120f));
+                .setLatitude(36f)
+                .setLongitude(-122f));
 
         Log.d(TAG, "createTestData end");
     }
