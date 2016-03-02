@@ -29,30 +29,19 @@ public class DataSource {
         mDatabaseOpenHelper = new DatabaseOpenHelper(context,
                 mPointOfInterestTable);
 
-        mPointsOfInterest = new ArrayList<PointOfInterest>();
-        createTestData(context);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
-
-               for (PointOfInterest pointOfInterest : mPointsOfInterest) {
-                   insertPointOfInterest(pointOfInterest);
-               }
-                Log.d(TAG, "constructor thread inner run complete");
-            }
-        }).start();
+        mPointsOfInterest = readTableToModel();
     }
 
-    public void insertPointOfInterest(PointOfInterest pointOfInterest) {
+    public long insertPointOfInterest(PointOfInterest pointOfInterest) {
         SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
-        new PointOfInterestTable.Builder()
+        PointOfInterestTable.Builder builder = new PointOfInterestTable.Builder()
                 .setTitle(pointOfInterest.getTitle())
                 .setGUID(pointOfInterest.getGuid())
                 .setLatitude(pointOfInterest.getLatitude())
-                .setLongitude(pointOfInterest.getLongitude())
-                .insert(writableDatabase);
+                .setLongitude(pointOfInterest.getLongitude());
+
+        long rowId = builder.insert(writableDatabase);
+        return rowId;
     }
 
     public List<PointOfInterest> getPointsOfInterest() {
@@ -61,45 +50,71 @@ public class DataSource {
 
     public static PointOfInterest pointOfInterestFromCursor(Cursor cursor) {
         return new PointOfInterest()
+                .setRowId(PointOfInterestTable.getRowId(cursor))
                 .setGuid(PointOfInterestTable.getGUID(cursor))
                 .setTitle(PointOfInterestTable.getTitle(cursor))
                 .setLatitude(PointOfInterestTable.getLatitude(cursor))
                 .setLongitude(PointOfInterestTable.getLongitude(cursor));
     }
 
+    private List<PointOfInterest> readTableToModel() {
+        Log.v(TAG, "readTableToModel");
+
+        List<PointOfInterest> pointsOfInterest = new ArrayList<PointOfInterest>();
+        Cursor itemCursor = mPointOfInterestTable.fetchAll(mDatabaseOpenHelper.getReadableDatabase());
+
+        if (itemCursor.moveToFirst()) {
+            do {
+                PointOfInterest newPOI = pointOfInterestFromCursor(itemCursor);
+                pointsOfInterest.add(newPOI);
+            } while (itemCursor.moveToNext());
+        }
+        return pointsOfInterest;
+    }
+
     public void createTestData(Context context) {
-        //context.deleteDatabase("blocspot_db");
+        context.deleteDatabase("blocspot_db");
 
-        mPointsOfInterest.add(new PointOfInterest());
-        mPointsOfInterest.add(new PointOfInterest());
-        mPointsOfInterest.add(new PointOfInterest()
-                .setGuid("guid1")
-                .setTitle("title 1")
-                .setLatitude(38f)
-                .setLongitude(-122f));
-        mPointsOfInterest.add(new PointOfInterest()
-                .setGuid("guid2")
-                .setTitle("title 2")
-                .setLatitude(37f)
-                .setLongitude(-122f));
-        mPointsOfInterest.add(new PointOfInterest()
-                .setGuid("guid3")
-                .setTitle("title 3")
-                .setLatitude(36f)
-                .setLongitude(-122f));
+//        mPointsOfInterest.add(new PointOfInterest());
+//        mPointsOfInterest.add(new PointOfInterest());
+//        mPointsOfInterest.add(new PointOfInterest()
+//                .setGuid("guid1")
+//                .setTitle("title 1")
+//                .setLatitude(38f)
+//                .setLongitude(-122f));
+//        mPointsOfInterest.add(new PointOfInterest()
+//                .setGuid("guid2")
+//                .setTitle("title 2")
+//                .setLatitude(37f)
+//                .setLongitude(-122f));
+//        mPointsOfInterest.add(new PointOfInterest()
+//                .setGuid("guid3")
+//                .setTitle("title 3")
+//                .setLatitude(36f)
+//                .setLongitude(-122f));
 
-        Log.d(TAG, "createTestData end");
+//        mPointsOfInterest.add(new PointOfInterest()
+//                .setTitle("Picante Berkeley")
+//                .setLatitude(37.8781f)
+//                .setLongitude(-122.3010f));
+
+        mPointsOfInterest.add(new PointOfInterest()
+                .setTitle("Albany Hill")
+                .setLatitude(37.892f)
+                .setLongitude(-122.306f));
+
+        Log.v(TAG, "createTestData end");
     }
 
     public void testDatabase() {
-        Log.d(TAG, "testDatabase");
+        Log.v(TAG, "testDatabase");
 
         Cursor itemCursor = mPointOfInterestTable.fetchAll(mDatabaseOpenHelper.getReadableDatabase());
 
         itemCursor.moveToFirst();
         do {
             PointOfInterest newPOI = pointOfInterestFromCursor(itemCursor);
-            Log.d(TAG, "testDatabase " + newPOI.getTitle());
+            Log.v(TAG, "testDatabase " + newPOI.getTitle());
         } while (itemCursor.moveToNext());
 
     }

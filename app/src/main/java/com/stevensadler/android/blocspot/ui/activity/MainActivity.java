@@ -8,16 +8,29 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.location.Geofence;
 import com.stevensadler.android.blocspot.R;
+import com.stevensadler.android.blocspot.api.model.PointOfInterest;
+import com.stevensadler.android.blocspot.geofence.GeofenceStore;
+import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 import com.stevensadler.android.blocspot.ui.adapter.ViewPagerAdapter;
 import com.stevensadler.android.blocspot.ui.fragment.BlocspotMapFragment;
 import com.stevensadler.android.blocspot.ui.fragment.ItemListFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
+
+    private ArrayList<String> mStaleGeofenceIds;
+    private ArrayList<Geofence> mGeofences;
+    private GeofenceStore mGeofenceStore;
+    private List<PointOfInterest> mPointsOfInterest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +57,23 @@ public class MainActivity extends AppCompatActivity {
 //                BlocspotApplication.getSharedDataSource().testDatabase();
 //            }
 //        });
+
+        mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
+        mGeofences = new ArrayList<Geofence>();
+        mStaleGeofenceIds = new ArrayList<String>();
+        for (int i = 0; i < mPointsOfInterest.size(); i++) {
+            PointOfInterest poi = mPointsOfInterest.get(i);
+            mStaleGeofenceIds.add(""+poi.getRowId());
+            mGeofences.add(new Geofence.Builder()
+                            .setRequestId(""+poi.getRowId())
+                            .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
+                            .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                    Geofence.GEOFENCE_TRANSITION_EXIT)
+                            .build());
+        }
+        mStaleGeofenceIds.add("default_guid");
+        mGeofenceStore = new GeofenceStore(this, mGeofences, mStaleGeofenceIds);
     }
 
     private void setupViewPager(ViewPager viewPager) {
