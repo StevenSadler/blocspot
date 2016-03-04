@@ -1,5 +1,6 @@
 package com.stevensadler.android.blocspot;
 
+import android.database.Cursor;
 import android.test.ApplicationTestCase;
 import android.test.RenamingDelegatingContext;
 
@@ -99,13 +100,13 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
     /*
      * PointOfInterestTable
      */
-//    public void testTableInsertEmptyPOI() {
-//        dataSource.insertPointOfInterest(emptyPOI);
-//        Cursor itemCursor = dataSource.getCursorOfInsertedPOIWithGuid(emptyPOI.getGuid());
-//        PointOfInterest pulledPOI = DataSource.pointOfInterestFromCursor(itemCursor);
-//        assertEquals(emptyPOI.getGuid(), pulledPOI.getGuid());
-//        assertEquals(emptyPOI.getTitle(), pulledPOI.getTitle());
-//    }
+    public void testTableInsertEmptyPOI() {
+        dataSource.insertPointOfInterest(emptyPOI);
+        Cursor itemCursor = dataSource.getCursorOfInsertedPOIWithGuid(emptyPOI.getGuid());
+        PointOfInterest pulledPOI = DataSource.pointOfInterestFromCursor(itemCursor);
+        assertEquals(emptyPOI.getGuid(), pulledPOI.getGuid());
+        assertEquals(emptyPOI.getTitle(), pulledPOI.getTitle());
+    }
 //    public void testTableInsertPOI() {
 //        dataSource.insertPointOfInterest(testPOI);
 //        Cursor itemCursor = dataSource.getCursorOfInsertedPOI(testPOI);

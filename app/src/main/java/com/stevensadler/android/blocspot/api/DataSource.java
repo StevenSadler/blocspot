@@ -3,10 +3,13 @@ package com.stevensadler.android.blocspot.api;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.util.Log;
 
+import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.api.model.database.DatabaseOpenHelper;
+import com.stevensadler.android.blocspot.api.model.database.table.CategoryTable;
 import com.stevensadler.android.blocspot.api.model.database.table.PointOfInterestTable;
 
 import java.util.ArrayList;
@@ -21,19 +24,58 @@ public class DataSource {
 
     private DatabaseOpenHelper mDatabaseOpenHelper;
     private PointOfInterestTable mPointOfInterestTable;
+    private CategoryTable mCategoryTable;
 
     private List<PointOfInterest> mPointsOfInterest;
+    private List<Category> mCategories;
 
     public DataSource(Context context) {
         mPointOfInterestTable = new PointOfInterestTable();
+        mCategoryTable = new CategoryTable();
         mDatabaseOpenHelper = new DatabaseOpenHelper(context,
-                mPointOfInterestTable);
+                mPointOfInterestTable, mCategoryTable);
 
-        mPointsOfInterest = readTableToModel();
+        //context.deleteDatabase("blocspot_db");
+        mPointsOfInterest = readPointOfInterestTableToModel();
+        mCategories = readCategoryTableToModel();
+
+        /*
+         * This section should be uncommented and re-run after an app uninstall
+         * TODO get this working the right way
+         */
+
+//        createTestData(context);
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
+//
+//                for (PointOfInterest pointOfInterest : mPointsOfInterest) {
+//                    long poiRowId = insertPointOfInterest(pointOfInterest, writableDatabase);
+//                    pointOfInterest.setRowId(poiRowId);
+//                }
+//                for (Category category : mCategories) {
+//                    insertCategory(category, writableDatabase);
+//                }
+//                writableDatabase.close();
+//                Log.d(TAG, "constructor thread inner run complete");
+//            }
+//        }).start();
     }
 
-    public long insertPointOfInterest(PointOfInterest pointOfInterest) {
-        SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
+    public List<PointOfInterest> getPointsOfInterest() {
+        return mPointsOfInterest;
+    }
+    public List<Category> getCategories() {
+        return mCategories;
+    }
+
+    /*
+     * Point of Interest functions
+     */
+
+    public long insertPointOfInterest(PointOfInterest pointOfInterest, SQLiteDatabase writableDatabase) {
         PointOfInterestTable.Builder builder = new PointOfInterestTable.Builder()
                 .setTitle(pointOfInterest.getTitle())
                 .setGUID(pointOfInterest.getGuid())
@@ -42,10 +84,6 @@ public class DataSource {
 
         long rowId = builder.insert(writableDatabase);
         return rowId;
-    }
-
-    public List<PointOfInterest> getPointsOfInterest() {
-        return mPointsOfInterest;
     }
 
     public static PointOfInterest pointOfInterestFromCursor(Cursor cursor) {
@@ -57,20 +95,78 @@ public class DataSource {
                 .setLongitude(PointOfInterestTable.getLongitude(cursor));
     }
 
-    private List<PointOfInterest> readTableToModel() {
-        Log.v(TAG, "readTableToModel");
+    private List<PointOfInterest> readPointOfInterestTableToModel() {
+        Log.v(TAG, "readPointOfInterestTableToModel");
 
         List<PointOfInterest> pointsOfInterest = new ArrayList<PointOfInterest>();
-        Cursor itemCursor = mPointOfInterestTable.fetchAll(mDatabaseOpenHelper.getReadableDatabase());
+        SQLiteDatabase readableDatabase = mDatabaseOpenHelper.getReadableDatabase();
+        Cursor itemCursor = mPointOfInterestTable.fetchAll(readableDatabase);
 
-        if (itemCursor.moveToFirst()) {
+        if (itemCursor != null && itemCursor.moveToFirst()) {
             do {
                 PointOfInterest newPOI = pointOfInterestFromCursor(itemCursor);
                 pointsOfInterest.add(newPOI);
+                Log.v(TAG, newPOI.getTitle());
             } while (itemCursor.moveToNext());
         }
+        readableDatabase.close();
         return pointsOfInterest;
     }
+
+    /*
+     * Category functions
+     */
+    public void createAndInsertCategory(Category category) {
+        SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
+        insertCategory(category, writableDatabase);
+        mCategories.add(category);
+    }
+
+    public long insertCategory(Category category, SQLiteDatabase writableDatabase) {
+        CategoryTable.Builder builder = new CategoryTable.Builder()
+                .setTitle(category.getTitle())
+                .setColor(category.getColor());
+
+        long rowId;
+        if (writableDatabase == null) {
+            SQLiteDatabase wdb = mDatabaseOpenHelper.getWritableDatabase();
+            rowId = builder.insert(wdb);
+            wdb.close();
+
+        } else {
+            rowId = builder.insert(writableDatabase);
+        }
+        return rowId;
+    }
+
+    public static Category categoryFromCursor(Cursor cursor) {
+        return new Category()
+                .setRowId(CategoryTable.getRowId(cursor))
+                .setTitle(CategoryTable.getTitle(cursor))
+                .setColor(CategoryTable.getColor(cursor));
+    }
+
+    private List<Category> readCategoryTableToModel() {
+        Log.v(TAG, "readCategoryTableToModel");
+
+        List<Category> categories = new ArrayList<Category>();
+        SQLiteDatabase readableDatabase = mDatabaseOpenHelper.getReadableDatabase();
+        Cursor itemCursor = mCategoryTable.fetchAll(readableDatabase);
+
+        if (itemCursor != null && itemCursor.moveToFirst()) {
+            do {
+                Category newCategory = categoryFromCursor(itemCursor);
+                categories.add(newCategory);
+                Log.v(TAG, newCategory.getTitle());
+            } while (itemCursor.moveToNext());
+        }
+        readableDatabase.close();
+        return categories;
+    }
+
+    /*
+     *
+     */
 
     public void createTestData(Context context) {
         context.deleteDatabase("blocspot_db");
@@ -103,6 +199,11 @@ public class DataSource {
                 .setLatitude(37.892f)
                 .setLongitude(-122.306f));
 
+        mCategories.add(new Category()
+                .setTitle("Restaurant")
+                .setColor(Color.YELLOW));
+
+
         Log.v(TAG, "createTestData end");
     }
 
@@ -116,7 +217,6 @@ public class DataSource {
             PointOfInterest newPOI = pointOfInterestFromCursor(itemCursor);
             Log.v(TAG, "testDatabase " + newPOI.getTitle());
         } while (itemCursor.moveToNext());
-
     }
 
     /*
