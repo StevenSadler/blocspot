@@ -35,4 +35,5 @@ public class BlocspotApplication extends Application {
     public DataSource getDataSource() {
         return dataSource;
     }
+
 }

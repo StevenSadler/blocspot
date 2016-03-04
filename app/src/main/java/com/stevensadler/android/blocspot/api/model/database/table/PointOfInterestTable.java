@@ -33,6 +33,11 @@ public class PointOfInterestTable extends Table {
             return this;
         }
 
+        public Builder setRadius(float radius) {
+            values.put(COLUMN_RADIUS, radius);
+            return this;
+        }
+
         @Override
         public long insert(SQLiteDatabase writeableDB) {
             return writeableDB.insert(NAME, null, values);
@@ -51,6 +56,9 @@ public class PointOfInterestTable extends Table {
     public static float getLongitude(Cursor cursor) {
         return getFloat(cursor, COLUMN_LONGITUDE);
     }
+    public static float getRadius(Cursor cursor) {
+        return getFloat(cursor, COLUMN_RADIUS);
+    }
 
     private static final String NAME = "points_of_interest";
 
@@ -58,6 +66,7 @@ public class PointOfInterestTable extends Table {
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
+    private static final String COLUMN_RADIUS = "geofence_radius";
 
     @Override
     public String getName() {
@@ -71,7 +80,8 @@ public class PointOfInterestTable extends Table {
                 + COLUMN_GUID + " TEXT,"
                 + COLUMN_TITLE + " TEXT,"
                 + COLUMN_LATITUDE + " REAL,"
-                + COLUMN_LONGITUDE + " REAL)";
+                + COLUMN_LONGITUDE + " REAL,"
+                + COLUMN_RADIUS + " REAL)";
     }
 
     public Cursor fetchAll(SQLiteDatabase readonlyDatabase) {
