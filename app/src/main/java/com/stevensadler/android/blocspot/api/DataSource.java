@@ -82,7 +82,16 @@ public class DataSource {
                 .setLatitude(pointOfInterest.getLatitude())
                 .setLongitude(pointOfInterest.getLongitude());
 
-        long rowId = builder.insert(writableDatabase);
+        long rowId;
+        if (writableDatabase == null) {
+            SQLiteDatabase wdb = mDatabaseOpenHelper.getWritableDatabase();
+            rowId = builder.insert(wdb);
+            wdb.close();
+
+        } else {
+            rowId = builder.insert(writableDatabase);
+        }
+        pointOfInterest.setRowId(rowId);
         return rowId;
     }
 
@@ -95,7 +104,7 @@ public class DataSource {
                 .setLongitude(PointOfInterestTable.getLongitude(cursor));
     }
 
-    private List<PointOfInterest> readPointOfInterestTableToModel() {
+    public List<PointOfInterest> readPointOfInterestTableToModel() {
         Log.v(TAG, "readPointOfInterestTableToModel");
 
         List<PointOfInterest> pointsOfInterest = new ArrayList<PointOfInterest>();
@@ -136,6 +145,7 @@ public class DataSource {
         } else {
             rowId = builder.insert(writableDatabase);
         }
+        category.setRowId(rowId);
         return rowId;
     }
 
@@ -146,7 +156,7 @@ public class DataSource {
                 .setColor(CategoryTable.getColor(cursor));
     }
 
-    private List<Category> readCategoryTableToModel() {
+    public List<Category> readCategoryTableToModel() {
         Log.v(TAG, "readCategoryTableToModel");
 
         List<Category> categories = new ArrayList<Category>();
@@ -222,10 +232,31 @@ public class DataSource {
     /*
      * test function used by ApplicationTest
      */
-    public Cursor getCursorOfInsertedPOIWithGuid(String guid) {
-        // query the DB for the passed pointOfInterest
-        Cursor itemCursor = mPointOfInterestTable.fetchWithGuid(
-                mDatabaseOpenHelper.getReadableDatabase(), guid);
+    public Cursor getCursorOfInsertedPOIWithRowId(long rowId) {
+        Cursor itemCursor = mPointOfInterestTable.fetchRow(
+                mDatabaseOpenHelper.getReadableDatabase(), rowId);
         return itemCursor;
     }
+    public Cursor getCursorOfInsertedCategoryWithRowId(long rowId) {
+        Cursor itemCursor = mCategoryTable.fetchRow(
+                mDatabaseOpenHelper.getReadableDatabase(), rowId);
+        return itemCursor;
+    }
+
+//    public Cursor getCursorOfInsertedPOIWithGuid(String guid) {
+//        // query the DB for the passed pointOfInterest
+//        Cursor itemCursor = mPointOfInterestTable.fetchWithGuid(
+//                mDatabaseOpenHelper.getReadableDatabase(), guid);
+//        return itemCursor;
+//    }
+//
+//    public PointOfInterest getRoundTripInsertPointOfInterest(PointOfInterest poi) {
+//        insertPointOfInterest(poi, null);
+//        String guid = poi.getGuid();
+//        Cursor itemCursor = mPointOfInterestTable.fetchWithGuid(
+//                mDatabaseOpenHelper.getReadableDatabase(), guid);
+//
+//        PointOfInterest newPOI = pointOfInterestFromCursor(itemCursor);
+//        return newPOI;
+//    }
 }

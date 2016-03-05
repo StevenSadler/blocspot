@@ -75,7 +75,7 @@ public class PointOfInterestTable extends Table {
 
     @Override
     public String getCreateStatement() {
-        return "CREATE TABLE " + getName() + " ("
+        return "CREATE TABLE IF NOT EXISTS " + getName() + " ("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_GUID + " TEXT,"
                 + COLUMN_TITLE + " TEXT,"
@@ -84,15 +84,36 @@ public class PointOfInterestTable extends Table {
                 + COLUMN_RADIUS + " REAL)";
     }
 
+    @Override
+    public void onUpgrade(SQLiteDatabase writableDatabase, int oldversion, int newversion) {
+        // this only matters on production apps
+        //
+        // on oldversion 1, upgrade would never hit that case, but it might be
+        // a visual record of development of the original getCreateStatement
+        //
+        // on all oldversions after 1, we need to use something like
+        // "ALTER TABLE " + getName() +
+        // "  ADD COLUMN column_name column_definition;"
+        //
+        switch (oldversion) {
+            case 1:
+                writableDatabase.execSQL("CREATE TABLE " + getName() + " ("
+                        + COLUMN_ID + " INTEGER PRIMARY KEY,"
+                        + COLUMN_GUID + " TEXT,"
+                        + COLUMN_TITLE + " TEXT,"
+                        + COLUMN_LATITUDE + " REAL,"
+                        + COLUMN_LONGITUDE + " REAL)");
+            case 2:
+                writableDatabase.execSQL("ALTER TABLE " + getName()
+                        + "ADD COLUMN " + COLUMN_RADIUS + " REAL");
+            default:
+                break;
+        }
+    }
+
     public Cursor fetchAll(SQLiteDatabase readonlyDatabase) {
         return readonlyDatabase.query(true, getName(), null, null,
                 null,
-                null, null, null, null);
-    }
-
-    public Cursor fetchWithGuid(SQLiteDatabase readonlyDatabase, String guid) {
-        return readonlyDatabase.query(true,getName(), null, "? = ?",
-                new String[] {COLUMN_GUID, guid},
                 null, null, null, null);
     }
 }

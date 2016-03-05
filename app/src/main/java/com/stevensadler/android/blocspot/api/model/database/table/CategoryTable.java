@@ -3,7 +3,6 @@ package com.stevensadler.android.blocspot.api.model.database.table;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 
 /**
  * Created by Steven on 3/2/2016.
@@ -49,22 +48,48 @@ public class CategoryTable extends Table {
 
     @Override
     public String getCreateStatement() {
-        return "CREATE TABLE " + getName() + " ("
+        return "CREATE TABLE IF NOT EXISTS " + getName() + " ("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_TITLE + " TEXT,"
                 + COLUMN_COLOR + " INTEGER)";
     }
 
-    public Cursor fetchAll(SQLiteDatabase readonlyDatabase) {
-        try {
-            return readonlyDatabase.query(true, getName(), null, null,
-                    null,
-                    null, null, null, null);
-        } catch (SQLiteException e) {
-            // if the DB does not have a table named getName(),
-            // then it will throw a SQLiteException
-            return null;
+    @Override
+    public void onUpgrade(SQLiteDatabase writableDatabase, int oldversion, int newversion) {
+        // this only matters on production apps
+        //
+        // on oldversion 1, upgrade would never hit that case, but it might be
+        // a visual record of development of the original getCreateStatement
+        //
+        // on all oldversions after 1, we need to use something like
+        // "ALTER TABLE " + getName() +
+        // "  ADD COLUMN column_name column_definition;"
+        //
+        switch (oldversion) {
+            case 1:
+                writableDatabase.execSQL("CREATE TABLE " + getName() + " ("
+                        + COLUMN_ID + " INTEGER PRIMARY KEY,"
+                        + COLUMN_TITLE + " TEXT)");
+            case 2:
+                writableDatabase.execSQL("ALTER TABLE " + getName()
+                        + "ADD COLUMN " + COLUMN_COLOR + " INTEGER");
+            default:
+                break;
         }
     }
 
+    public Cursor fetchAll(SQLiteDatabase readonlyDatabase) {
+        return readonlyDatabase.query(true, getName(), null, null,
+                null,
+                null, null, null, null);
+//        try {
+//            return readonlyDatabase.query(true, getName(), null, null,
+//                    null,
+//                    null, null, null, null);
+//        } catch (SQLiteException e) {
+//            // if the DB does not have a table named getName(),
+//            // then it will throw a SQLiteException
+//            return null;
+//        }
+    }
 }

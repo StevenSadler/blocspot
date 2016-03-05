@@ -17,9 +17,7 @@ public abstract class Table {
     public abstract String getName();
     public abstract String getCreateStatement();
 
-    public void onUpgrade(SQLiteDatabase writeableDatabase, int oldversion, int newversion) {
-        // TODO implement this, drop if exist and recreate
-    }
+    abstract public void onUpgrade(SQLiteDatabase writableDatabase, int oldversion, int newversion);
 
     public Cursor fetchRow(SQLiteDatabase readonlyDatabase, long rowId) {
         return readonlyDatabase.query(true, getName(), null, COLUMN_ID + " = ?",
