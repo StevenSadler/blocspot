@@ -1,12 +1,14 @@
 package com.stevensadler.android.blocspot.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stevensadler.android.blocspot.R;
+import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 
 import java.lang.ref.WeakReference;
@@ -18,16 +20,19 @@ import java.util.List;
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemHolder> {
 
     public static interface Delegate {
-        public void onItemClicked(ItemListAdapter itemListAdapter, PointOfInterest pointOfInterest);
+        public void onItemClicked(PointOfInterest pointOfInterest);
+        public void onItemLongClicked(PointOfInterest pointOfInterest);
     }
 
     private static String TAG = ItemListAdapter.class.getSimpleName();
 
     private List<PointOfInterest> mPointsOfInterest;
+    private List<Category> mCategories;
     private WeakReference<Delegate> delegate;
 
-    public ItemListAdapter(List<PointOfInterest> pointsOfInterest) {
+    public ItemListAdapter(List<PointOfInterest> pointsOfInterest, List<Category> categories) {
         mPointsOfInterest = pointsOfInterest;
+        mCategories = categories;
     }
 
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,7 +44,16 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemHo
 
     @Override
     public void onBindViewHolder(ItemHolder holder, int position) {
-        holder.update(mPointsOfInterest.get(position));
+        PointOfInterest pointOfInterest = mPointsOfInterest.get(position);
+        Category category = null;
+        for (Category cat : mCategories) {
+            if (cat.getRowId() == pointOfInterest.getCategoryId()) {
+                category = cat;
+            }
+        }
+//        Cursor cursor = BlocspotApplication.getSharedDataSource().getCursorOfInsertedCategoryWithRowId(pointOfInterest.getCategoryId());
+//        Category category = BlocspotApplication.getSharedDataSource().getCategoryWithRowId(pointOfInterest.getCategoryId());
+        holder.update(pointOfInterest, category);
     }
 
     @Override
@@ -61,20 +75,50 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemHo
     /*
      * ItemHolder class
      */
-    class ItemHolder extends RecyclerView.ViewHolder {
+    class ItemHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener,
+            View.OnLongClickListener {
 
+        public View poiCategorySwatch;
         public TextView poiTitleTextView;
 
         private PointOfInterest pointOfInterest;
+        private Category category;
 
         public ItemHolder(View itemView) {
             super(itemView);
             poiTitleTextView = (TextView) itemView.findViewById(R.id.tv_poi_item_title);
+            poiTitleTextView.setOnClickListener(this);
+            poiTitleTextView.setOnLongClickListener(this);
+
+            poiCategorySwatch = (View) itemView.findViewById(R.id.v_poi_item_category_swatch);
+
         }
 
-        void update(PointOfInterest poi) {
-            pointOfInterest = poi;
+        void update(PointOfInterest pointOfInterest, Category category) {
+            this.pointOfInterest = pointOfInterest;
+            this.category = category;
             poiTitleTextView.setText(pointOfInterest.getTitle());
+            if (category != null) {
+                poiCategorySwatch.setBackgroundColor(category.getColor());
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (getDelegate() != null) {
+                getDelegate().onItemClicked(pointOfInterest);
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            Log.v(TAG, "onLongClick");
+            if (getDelegate() != null) {
+                getDelegate().onItemLongClicked(pointOfInterest);
+                return true;
+            }
+            return false;
         }
     }
 }

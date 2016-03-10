@@ -11,12 +11,15 @@ import android.view.MenuItem;
 
 import com.google.android.gms.location.Geofence;
 import com.stevensadler.android.blocspot.R;
+import com.stevensadler.android.blocspot.api.DataSource;
 import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.geofence.GeofenceStore;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 import com.stevensadler.android.blocspot.ui.adapter.ViewPagerAdapter;
 import com.stevensadler.android.blocspot.ui.fragment.BlocspotMapFragment;
+import com.stevensadler.android.blocspot.ui.fragment.ChooseCategoryDialogFragment;
+import com.stevensadler.android.blocspot.ui.fragment.IPointOfInterestInput;
 import com.stevensadler.android.blocspot.ui.fragment.ItemListFragment;
 import com.stevensadler.android.blocspot.ui.fragment.SaveCategoryDialogFragment;
 
@@ -24,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
+        ChooseCategoryDialogFragment.Listener,
+        IPointOfInterestInput,
         SaveCategoryDialogFragment.SaveCategoryDialogListener {
 
     private static String TAG = MainActivity.class.getSimpleName();
@@ -73,9 +78,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        ItemListFragment itemListFragment = new ItemListFragment();
+        BlocspotMapFragment blocspotMapFragment = new BlocspotMapFragment();
+        BlocspotApplication.getSharedDataSource().addObserver(itemListFragment);
+        BlocspotApplication.getSharedDataSource().addObserver(blocspotMapFragment);
+
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ItemListFragment(), "List");
-        adapter.addFragment(new BlocspotMapFragment(), "Map");
+        adapter.addFragment(itemListFragment, "List");
+        adapter.addFragment(blocspotMapFragment, "Map");
         viewPager.setAdapter(adapter);
     }
 
@@ -108,6 +118,44 @@ public class MainActivity extends AppCompatActivity implements
         dialogFragment.show(getSupportFragmentManager(), "Save Category Dialog Fragment");
     }
 
+
+    /*
+     * IPointOfInterestInput
+     */
+    @Override
+    public void onSelectPointOfInterest(PointOfInterest pointOfInterest) {
+        int mode = BlocspotApplication.getSharedDataSource().SET_POI_CATEGORY;
+        BlocspotApplication.getSharedDataSource().setSelectedPOI(pointOfInterest);
+        BlocspotApplication.getSharedDataSource().setChooseCategoryMode(mode);
+
+        ChooseCategoryDialogFragment dialogFragment = new ChooseCategoryDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "choose category");
+    }
+
+    /*
+     * ChooseCategoryDialogFragment.Listener
+     */
+    @Override
+    public void onFinishChooseCategoryDialog(Category category) {
+        int mode = BlocspotApplication.getSharedDataSource().getChooseCategoryMode();
+        PointOfInterest pointOfInterest = BlocspotApplication.getSharedDataSource().getSelectedPOI();
+        switch (mode) {
+            case DataSource.SET_POI_CATEGORY:
+                Log.v(TAG, "onFinishChooseCategoryDialog    set poi category");
+                BlocspotApplication.getSharedDataSource().setPOICategory(category, pointOfInterest);
+                break;
+            case DataSource.SET_FILTER:
+                Log.v(TAG, "onFinishChooseCategoryDialog    set filter");
+                break;
+            default:
+                Log.v(TAG, "onFinishChooseCategoryDialog    mode invalid");
+                break;
+        }
+        // need to create a new category
+        // save it to the model list
+        // save it to the db table
+    }
+
     /*
      * SaveCategoryDialogFragment.SaveCategoryDialogListener
      */
@@ -122,8 +170,5 @@ public class MainActivity extends AppCompatActivity implements
                 .setColor(color);
 
         BlocspotApplication.getSharedDataSource().createAndInsertCategory(category);
-
-
-        //BlocspotApplication.getSharedDataSource().insertCategory(category, writeableDatabase);
     }
 }
