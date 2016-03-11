@@ -118,13 +118,27 @@ public class MainActivity extends AppCompatActivity implements
         dialogFragment.show(getSupportFragmentManager(), "Save Category Dialog Fragment");
     }
 
+    public void onMenuFilterCategoryClick(MenuItem menuItem) {
+        Log.d(TAG, "onMenuFilterCategoryClick");
+        int mode = BlocspotApplication.getSharedDataSource().FILTER_BY_CATEGORY;
+        BlocspotApplication.getSharedDataSource().setChooseCategoryMode(mode);
+
+        ChooseCategoryDialogFragment dialogFragment = new ChooseCategoryDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "filter category");
+    }
+
+    public void onMenuRemoveFilterCategoryClick(MenuItem menuItem) {
+        Log.d(TAG, "onMenuRemoveFilterCategoryClick");
+        BlocspotApplication.getSharedDataSource().setCategoryFilter(null);
+    }
+
 
     /*
      * IPointOfInterestInput
      */
     @Override
     public void onSelectPointOfInterest(PointOfInterest pointOfInterest) {
-        int mode = BlocspotApplication.getSharedDataSource().SET_POI_CATEGORY;
+        int mode = BlocspotApplication.getSharedDataSource().ASSIGN_CATEGORY;
         BlocspotApplication.getSharedDataSource().setSelectedPOI(pointOfInterest);
         BlocspotApplication.getSharedDataSource().setChooseCategoryMode(mode);
 
@@ -140,20 +154,21 @@ public class MainActivity extends AppCompatActivity implements
         int mode = BlocspotApplication.getSharedDataSource().getChooseCategoryMode();
         PointOfInterest pointOfInterest = BlocspotApplication.getSharedDataSource().getSelectedPOI();
         switch (mode) {
-            case DataSource.SET_POI_CATEGORY:
+            case DataSource.ASSIGN_CATEGORY:
                 Log.v(TAG, "onFinishChooseCategoryDialog    set poi category");
                 BlocspotApplication.getSharedDataSource().setPOICategory(category, pointOfInterest);
                 break;
-            case DataSource.SET_FILTER:
+            case DataSource.FILTER_BY_CATEGORY:
                 Log.v(TAG, "onFinishChooseCategoryDialog    set filter");
+                BlocspotApplication.getSharedDataSource().setCategoryFilter(category);
                 break;
             default:
-                Log.v(TAG, "onFinishChooseCategoryDialog    mode invalid");
+                Log.e(TAG, "onFinishChooseCategoryDialog    mode invalid");
                 break;
         }
-        // need to create a new category
-        // save it to the model list
-        // save it to the db table
+        // clean up the mode once the dialog is finished
+        // since only this listener needs it
+        BlocspotApplication.getSharedDataSource().setChooseCategoryMode(DataSource.NO_MODE);
     }
 
     /*

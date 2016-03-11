@@ -25,8 +25,8 @@ public class DataSource extends Observable {
 
     // ChooseCategory modes
     final public static int NO_MODE = 1;
-    final public static int SET_POI_CATEGORY = 2;
-    final public static int SET_FILTER = 3;
+    final public static int ASSIGN_CATEGORY = 2;
+    final public static int FILTER_BY_CATEGORY = 3;
 
     private DatabaseOpenHelper mDatabaseOpenHelper;
     private PointOfInterestTable mPointOfInterestTable;
@@ -37,6 +37,7 @@ public class DataSource extends Observable {
 
     private PointOfInterest mSelectedPOI;
     private int mChooseCategoryMode = NO_MODE;
+    private Category mCategoryFilter = null;
 
     public DataSource(Context context) {
         mPointOfInterestTable = new PointOfInterestTable();
@@ -80,7 +81,18 @@ public class DataSource extends Observable {
     }
 
     public List<PointOfInterest> getPointsOfInterest() {
-        return mPointsOfInterest;
+        if (mCategoryFilter == null) {
+            return mPointsOfInterest;
+        } else {
+            List<PointOfInterest> filteredPOIList = new ArrayList<>();
+            long categoryId = mCategoryFilter.getRowId();
+            for (PointOfInterest poi : mPointsOfInterest) {
+                if (poi.getCategoryId() == categoryId) {
+                    filteredPOIList.add(poi);
+                }
+            }
+            return filteredPOIList;
+        }
     }
     public List<Category> getCategories() {
         return mCategories;
@@ -97,6 +109,17 @@ public class DataSource extends Observable {
     }
     public int getChooseCategoryMode() {
         return mChooseCategoryMode;
+    }
+    public void setCategoryFilter(Category category) {
+        mCategoryFilter = category;
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+    public Category getCategoryFilter() {
+        return mCategoryFilter;
     }
     public void setPOICategory(Category category, PointOfInterest pointOfInterest) {
         // update the table

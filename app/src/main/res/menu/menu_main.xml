@@ -14,4 +14,18 @@
         android:title="@string/menu_add_category"
         app:showAsAction="ifRoom"
         android:onClick="onMenuAddCategoryClick" />
+
+    <item
+        android:id="@+id/action_filter_category"
+        android:orderInCategory="100"
+        android:title="@string/menu_filter_category"
+        app:showAsAction="ifRoom"
+        android:onClick="onMenuFilterCategoryClick" />
+
+    <item
+        android:id="@+id/action_remove_filter_category"
+        android:orderInCategory="100"
+        android:title="@string/menu_remove_filter_category"
+        app:showAsAction="ifRoom"
+        android:onClick="onMenuRemoveFilterCategoryClick" />
 </menu>
