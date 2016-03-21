@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
-//    private ArrayList<String> mStaleGeofenceIds;
     private ArrayList<Geofence> mGeofences;
     private GeofenceStore mGeofenceStore;
     private List<PointOfInterest> mPointsOfInterest;
@@ -60,10 +59,8 @@ public class MainActivity extends AppCompatActivity implements
 
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mGeofences = new ArrayList<Geofence>();
-//        mStaleGeofenceIds = new ArrayList<String>();
         for (int i = 0; i < mPointsOfInterest.size(); i++) {
             PointOfInterest poi = mPointsOfInterest.get(i);
-//            mStaleGeofenceIds.add(""+poi.getRowId());
             mGeofences.add(new Geofence.Builder()
                             .setRequestId(""+poi.getRowId())
                             .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
@@ -72,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements
                                     Geofence.GEOFENCE_TRANSITION_EXIT)
                             .build());
         }
-//        mStaleGeofenceIds.add("default_guid");
-//        mGeofenceStore = new GeofenceStore(this, mGeofences, mStaleGeofenceIds);
         mGeofenceStore = new GeofenceStore(this, mGeofences);
     }
 
@@ -93,6 +88,14 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+//        // Get the SearchView and set the searchable configuration
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+//
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setIconifiedByDefault(false);
+
         return true;
     }
 
@@ -109,6 +112,11 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onMenuSearchClick(MenuItem menuItem) {
+        Log.d(TAG, "onMenuSearchClick");
+        onSearchRequested();
     }
 
     public void onMenuAddCategoryClick(MenuItem menuItem) {

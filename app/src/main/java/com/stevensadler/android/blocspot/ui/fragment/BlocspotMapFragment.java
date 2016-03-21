@@ -33,11 +33,13 @@ public class BlocspotMapFragment extends SupportMapFragment implements
     private static int DEFAULT_ALPHA = 0x20;
 
     private static List<PointOfInterest> mPointsOfInterest;
+    private static List<PointOfInterest> mYelpPointsOfInterest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
+        mYelpPointsOfInterest = BlocspotApplication.getSharedDataSource().getYelpPointsOfInterest();
         initMap();
 
     }
@@ -49,6 +51,7 @@ public class BlocspotMapFragment extends SupportMapFragment implements
     public void update(Observable observable, Object data) {
         Log.v(TAG, "update");
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
+        mYelpPointsOfInterest = BlocspotApplication.getSharedDataSource().getYelpPointsOfInterest();
         initMap();
     }
 
@@ -61,29 +64,38 @@ public class BlocspotMapFragment extends SupportMapFragment implements
             public void onMapReady(GoogleMap googleMap) {
                 googleMap.clear();
                 for (PointOfInterest pointOfInterest : mPointsOfInterest) {
-                    LatLng latLng = new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude());
-                    Category category = BlocspotApplication.getSharedDataSource()
-                            .getCategoryWithRowId(pointOfInterest.getCategoryId());
-
-                    int baseColor = (category == null) ? DEFAULT_COLOR : category.getColor();
-                    int color = ColorUtils.setAlphaComponent(baseColor, DEFAULT_ALPHA);
-                    float[] hsl = new float[3];
-                    ColorUtils.colorToHSL(color, hsl);
-                    float hue = hsl[0];
-
-                    googleMap.addMarker(new MarkerOptions()
-                            .title(pointOfInterest.getTitle())
-                            .position(latLng)
-                            .icon(BitmapDescriptorFactory.defaultMarker(hue)));
-
-                    googleMap.addCircle(new CircleOptions()
-                            .center(latLng)
-                            .radius(pointOfInterest.getRadius())
-                            .fillColor(color)
-                            .strokeColor(Color.TRANSPARENT)
-                            .strokeWidth(2));
+                    showMarker(googleMap, pointOfInterest);
+//                    LatLng latLng = new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude());
+//                    Category category = BlocspotApplication.getSharedDataSource()
+//                            .getCategoryWithRowId(pointOfInterest.getCategoryId());
+//
+//                    int baseColor = (category == null) ? DEFAULT_COLOR : category.getColor();
+//                    int color = ColorUtils.setAlphaComponent(baseColor, DEFAULT_ALPHA);
+//                    float[] hsl = new float[3];
+//                    ColorUtils.colorToHSL(color, hsl);
+//                    float hue = hsl[0];
+//
+//                    googleMap.addMarker(new MarkerOptions()
+//                            .title(pointOfInterest.getTitle())
+//                            .position(latLng)
+//                            .icon(BitmapDescriptorFactory.defaultMarker(hue)));
+//
+//                    googleMap.addCircle(new CircleOptions()
+//                            .center(latLng)
+//                            .radius(pointOfInterest.getRadius())
+//                            .fillColor(color)
+//                            .strokeColor(Color.TRANSPARENT)
+//                            .strokeWidth(2));
                 }
-                if (mPointsOfInterest.size() > 0) {
+                for (PointOfInterest yelpPointOfInterest : mYelpPointsOfInterest) {
+                    showMarker(googleMap, yelpPointOfInterest);
+                }
+                if (mYelpPointsOfInterest.size() > 0) {
+                    LatLng cameraLatLng = new LatLng(mYelpPointsOfInterest.get(0).getLatitude(),
+                            mYelpPointsOfInterest.get(0).getLongitude());
+
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 10));
+                } else if (mPointsOfInterest.size() > 0) {
                     LatLng cameraLatLng = new LatLng(mPointsOfInterest.get(0).getLatitude(),
                             mPointsOfInterest.get(0).getLongitude());
 
@@ -91,5 +103,29 @@ public class BlocspotMapFragment extends SupportMapFragment implements
                 }
             }
         });
+    }
+
+    private void showMarker(GoogleMap googleMap, PointOfInterest pointOfInterest) {
+        LatLng latLng = new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude());
+        Category category = BlocspotApplication.getSharedDataSource()
+                .getCategoryWithRowId(pointOfInterest.getCategoryId());
+
+        int baseColor = (category == null) ? DEFAULT_COLOR : category.getColor();
+        int color = ColorUtils.setAlphaComponent(baseColor, DEFAULT_ALPHA);
+        float[] hsl = new float[3];
+        ColorUtils.colorToHSL(color, hsl);
+        float hue = hsl[0];
+
+        googleMap.addMarker(new MarkerOptions()
+                .title(pointOfInterest.getTitle())
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(hue)));
+
+        googleMap.addCircle(new CircleOptions()
+                .center(latLng)
+                .radius(pointOfInterest.getRadius())
+                .fillColor(color)
+                .strokeColor(Color.TRANSPARENT)
+                .strokeWidth(2));
     }
 }

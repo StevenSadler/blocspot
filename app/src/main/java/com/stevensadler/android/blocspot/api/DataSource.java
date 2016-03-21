@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.location.Location;
 import android.util.Log;
 
 import com.stevensadler.android.blocspot.api.model.Category;
@@ -11,6 +12,11 @@ import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.api.model.database.DatabaseOpenHelper;
 import com.stevensadler.android.blocspot.api.model.database.table.CategoryTable;
 import com.stevensadler.android.blocspot.api.model.database.table.PointOfInterestTable;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +38,17 @@ public class DataSource extends Observable {
     private PointOfInterestTable mPointOfInterestTable;
     private CategoryTable mCategoryTable;
 
+    private List<PointOfInterest> mYelpPointsOfInterest;
     private List<PointOfInterest> mPointsOfInterest;
     private List<Category> mCategories;
 
     private PointOfInterest mSelectedPOI;
     private int mChooseCategoryMode = NO_MODE;
     private Category mCategoryFilter = null;
+    private Location mLastLocation = null;
 
     public DataSource(Context context) {
+        mYelpPointsOfInterest = new ArrayList<>();
         mPointOfInterestTable = new PointOfInterestTable();
         mCategoryTable = new CategoryTable();
         mDatabaseOpenHelper = new DatabaseOpenHelper(context,
@@ -98,6 +107,61 @@ public class DataSource extends Observable {
         return mCategories;
     }
 
+    /*
+     * convert the jsonString yelp query result
+     * to a poi list
+     */
+    public void setYelpPointsOfInterest(String jsonString) {
+        List<PointOfInterest> tempList = new ArrayList<>();
+        JSONParser parser = new JSONParser();
+        try {
+            Object obj = parser.parse(jsonString);
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray businesses = (JSONArray) jsonObject.get("businesses");
+
+            for (Object object : businesses) {
+                JSONObject business = (JSONObject) object;
+                String name = (String) business.get("name");
+                JSONObject location = (JSONObject) business.get("location");
+                JSONObject coordinate = (JSONObject) location.get("coordinate");
+                double dLatitude = (double) coordinate.get("latitude");
+                double dLongitude = (double) coordinate.get("longitude");
+
+
+                float latitude = (float) dLatitude;
+                float longitude = (float) dLongitude;
+
+                Log.v(TAG, "business name : " + name + " " + latitude + " " + longitude);
+
+                PointOfInterest poi = new PointOfInterest()
+                        .setTitle(name)
+                        .setLatitude(latitude)
+                        .setLongitude(longitude);
+
+                tempList.add(poi);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        mYelpPointsOfInterest = tempList;
+
+        // can't notify views becuase they were created on a different thread
+//        // notify observers
+//        setChanged();
+//        notifyObservers();
+//        clearChanged();
+    }
+    public List<PointOfInterest> getYelpPointsOfInterest() {
+        return mYelpPointsOfInterest;
+    }
+
+    public void setLastLocation(Location location) {
+        mLastLocation = location;
+    }
+    public Location getLastLocation() {
+        return mLastLocation;
+    }
     public void setSelectedPOI(PointOfInterest pointOfInterest) {
         mSelectedPOI = pointOfInterest;
     }

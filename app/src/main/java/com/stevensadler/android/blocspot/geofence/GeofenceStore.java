@@ -18,6 +18,7 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 
 import java.util.ArrayList;
 
@@ -150,6 +151,8 @@ public class GeofenceStore implements
                 + "Bearing:\t" + location.getBearing() + "\n"
                 + "Speed:\t\t" + location.getSpeed() + "\n"
                 + "Accuracy:\t" + location.getAccuracy() + "\n");
+
+        BlocspotApplication.getSharedDataSource().setLastLocation(location);
     }
 
     @Override

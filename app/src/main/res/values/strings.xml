@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">Blocspot</string>
     <string name="action_settings">Settings</string>
+    <string name="search_hint">search for ?</string>
 
+    <string name="consumer_key">AZAfuR4hsFeGab4qliknzg</string>
+    <string name="consumer_secret">Exts3s08c874WmZrubJ1SfNqlKI</string>
+    <string name="token">TTwHOghmiWMSX2n7_oo2XG9Mn8O8A4AZ</string>
+    <string name="token_secret">6m9rATv9fZD9cg7-rTXMydSGpBs</string>
+
+    <string name="menu_search">Search Yelp</string>
     <string name="menu_add_category">Add a Category</string>
     <string name="menu_filter_category">Filter by Category</string>
     <string name="menu_remove_filter_category">Remove Filter</string>
