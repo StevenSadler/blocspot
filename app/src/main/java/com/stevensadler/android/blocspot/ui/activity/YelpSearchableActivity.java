@@ -4,8 +4,10 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import android.widget.ListView;
 
 import com.stevensadler.android.blocspot.R;
 import com.stevensadler.android.blocspot.api.yelp.YelpQueryIntentService;
+import com.stevensadler.android.blocspot.api.yelp.YelpQueryReceiver;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 
 /**
@@ -24,26 +27,27 @@ public class YelpSearchableActivity extends ListActivity {
     private static String TAG = YelpSearchableActivity.class.getSimpleName();
 
     private Intent mServiceIntent;
-//    private YelpQueryReceiver mYelpQueryReceiver;
+    private YelpQueryReceiver mYelpQueryReceiver;
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Log.v(TAG, "onResume");
-//        registerReceiver(mYelpQueryReceiver, new IntentFilter(YelpQueryIntentService.BROADCAST_FILTER));
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        unregisterReceiver(mYelpQueryReceiver);
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume");
+        LocalBroadcastManager.getInstance(this).registerReceiver(mYelpQueryReceiver,
+                new IntentFilter(YelpQueryIntentService.BROADCAST_FILTER));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mYelpQueryReceiver);
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate");
 
-//        mYelpQueryReceiver = new YelpQueryReceiver();
+        mYelpQueryReceiver = new YelpQueryReceiver();
         mServiceIntent = new Intent(this, YelpQueryIntentService.class);
 
         //mServiceIntent = new Intent(this,)
@@ -104,8 +108,9 @@ public class YelpSearchableActivity extends ListActivity {
 
         //String resultString = mYelpAPI.searchForBusinessesByLocation(queryString, locationString);
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+
+//        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+//        mainActivityIntent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        startActivity(mainActivityIntent);
     }
 }

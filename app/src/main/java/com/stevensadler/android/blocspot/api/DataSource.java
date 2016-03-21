@@ -146,11 +146,10 @@ public class DataSource extends Observable {
         }
         mYelpPointsOfInterest = tempList;
 
-        // can't notify views becuase they were created on a different thread
-//        // notify observers
-//        setChanged();
-//        notifyObservers();
-//        clearChanged();
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
     }
     public List<PointOfInterest> getYelpPointsOfInterest() {
         return mYelpPointsOfInterest;

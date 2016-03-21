@@ -2,14 +2,10 @@ package com.stevensadler.android.blocspot.api.yelp;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * Created by Steven on 3/17/2016.
@@ -52,31 +48,35 @@ public class YelpQueryIntentService extends IntentService {
         // then move this code to DataSource?
         //parseJSONtoJava(queryResult);
 
-        BlocspotApplication.getSharedDataSource().setYelpPointsOfInterest(queryResult);
-        this.stopSelf();
+        //BlocspotApplication.getSharedDataSource().setYelpPointsOfInterest(queryResult);
+        //this.stopSelf();
+
+        Intent broadcastIntent = new Intent(YelpQueryIntentService.BROADCAST_FILTER);
+        broadcastIntent.putExtra("queryResult", queryResult);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
 
     }
 
-    public void parseJSONtoJava(String jsonString) {
-        JSONParser parser = new JSONParser();
-        try {
-            Object obj = parser.parse(jsonString);
-            JSONObject jsonObject = (JSONObject) obj;
-            JSONArray businesses = (JSONArray) jsonObject.get("businesses");
-
-            for (Object object : businesses) {
-                JSONObject business = (JSONObject) object;
-                String name = (String) business.get("name");
-                JSONObject location = (JSONObject) business.get("location");
-                JSONObject coordinate = (JSONObject) location.get("coordinate");
-                double latitude = (double) coordinate.get("latitude");
-                double longitude = (double) coordinate.get("longitude");
-
-                Log.v(TAG, "business name : " + name + " " + latitude + " " + longitude);
-            }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void parseJSONtoJava(String jsonString) {
+//        JSONParser parser = new JSONParser();
+//        try {
+//            Object obj = parser.parse(jsonString);
+//            JSONObject jsonObject = (JSONObject) obj;
+//            JSONArray businesses = (JSONArray) jsonObject.get("businesses");
+//
+//            for (Object object : businesses) {
+//                JSONObject business = (JSONObject) object;
+//                String name = (String) business.get("name");
+//                JSONObject location = (JSONObject) business.get("location");
+//                JSONObject coordinate = (JSONObject) location.get("coordinate");
+//                double latitude = (double) coordinate.get("latitude");
+//                double longitude = (double) coordinate.get("longitude");
+//
+//                Log.v(TAG, "business name : " + name + " " + latitude + " " + longitude);
+//            }
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
