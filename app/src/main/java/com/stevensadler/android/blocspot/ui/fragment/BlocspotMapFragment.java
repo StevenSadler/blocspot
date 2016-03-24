@@ -145,11 +145,16 @@ public class BlocspotMapFragment extends SupportMapFragment implements
         ColorUtils.colorToHSL(color, hsl);
         float hue = hsl[0];
 
-        Marker marker = googleMap.addMarker(new MarkerOptions()
+        MarkerOptions markerOptions = new MarkerOptions()
                 .title(pointOfInterest.getTitle())
                 .position(latLng)
-                .icon(BitmapDescriptorFactory.defaultMarker(hue)));
+                .icon(BitmapDescriptorFactory.defaultMarker(hue));
 
+        if (!pointOfInterest.getNote().equals(PointOfInterest.DEFAULT_NOTE)) {
+            markerOptions = markerOptions.snippet(pointOfInterest.getNote());
+        }
+        Marker marker = googleMap.addMarker(markerOptions);
+        
         if (showCircle) {
             googleMap.addCircle(new CircleOptions()
                     .center(latLng)

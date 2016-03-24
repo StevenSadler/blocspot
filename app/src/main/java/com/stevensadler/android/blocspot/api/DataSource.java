@@ -226,7 +226,8 @@ public class DataSource extends Observable {
      * Point of Interest functions
      */
 
-    public void saveYelpPointOfInterest() {
+    public void saveYelpPointOfInterest(String note) {
+        mSelectedPOI.setNote(note);
         insertPointOfInterest(mSelectedPOI, null);
         mPointsOfInterest = readPointOfInterestTableToModel();
     }
@@ -281,6 +282,7 @@ public class DataSource extends Observable {
         PointOfInterestTable.Builder builder = new PointOfInterestTable.Builder()
                 .setTitle(pointOfInterest.getTitle())
                 .setGUID(pointOfInterest.getGuid())
+                .setNote(pointOfInterest.getNote())
                 .setLatitude(pointOfInterest.getLatitude())
                 .setLongitude(pointOfInterest.getLongitude())
                 .setCategoryId(pointOfInterest.getCategoryId());
@@ -304,6 +306,7 @@ public class DataSource extends Observable {
                 .setRowId(PointOfInterestTable.getRowId(cursor))
                 .setGuid(PointOfInterestTable.getGUID(cursor))
                 .setTitle(PointOfInterestTable.getTitle(cursor))
+                .setNote(PointOfInterestTable.getNote(cursor))
                 .setLatitude(PointOfInterestTable.getLatitude(cursor))
                 .setLongitude(PointOfInterestTable.getLongitude(cursor));
     }

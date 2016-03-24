@@ -179,10 +179,10 @@ public class MainActivity extends AppCompatActivity implements
      * YelpDetailDialogFragment.Listener
      */
     @Override
-    public void onSaveYelpDetailDialog() {
+    public void onSaveYelpDetailDialog(String note) {
         // insert the poi in the table
         // add poi to model list
-        BlocspotApplication.getSharedDataSource().saveYelpPointOfInterest();
+        BlocspotApplication.getSharedDataSource().saveYelpPointOfInterest(note);
         BlocspotApplication.getSharedDataSource().clearYelpPointsOfInterest();
     }
     @Override

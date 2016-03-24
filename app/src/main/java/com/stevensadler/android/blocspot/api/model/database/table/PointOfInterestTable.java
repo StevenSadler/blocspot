@@ -30,6 +30,11 @@ public class PointOfInterestTable extends Table {
             return this;
         }
 
+        public Builder setNote(String note) {
+            values.put(COLUMN_NOTE, note);
+            return this;
+        }
+
         public Builder setLatitude(float latitude) {
             values.put(COLUMN_LATITUDE, latitude);
             return this;
@@ -60,6 +65,9 @@ public class PointOfInterestTable extends Table {
     public static String getTitle(Cursor cursor) {
         return getString(cursor, COLUMN_TITLE);
     }
+    public static String getNote(Cursor cursor) {
+        return getString(cursor, COLUMN_NOTE);
+    }
     public static float getLatitude(Cursor cursor) {
         return getFloat(cursor, COLUMN_LATITUDE);
     }
@@ -75,6 +83,7 @@ public class PointOfInterestTable extends Table {
     private static final String COLUMN_GUID = "guid";
     private static final String COLUMN_CATEGORY_ID = "category_id";
     private static final String COLUMN_TITLE = "title";
+    private static final String COLUMN_NOTE = "note";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
     private static final String COLUMN_RADIUS = "geofence_radius";
@@ -90,6 +99,7 @@ public class PointOfInterestTable extends Table {
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_GUID + " TEXT,"
                 + COLUMN_TITLE + " TEXT,"
+                + COLUMN_NOTE + " TEXT,"
                 + COLUMN_LATITUDE + " REAL,"
                 + COLUMN_LONGITUDE + " REAL,"
                 + COLUMN_RADIUS + " REAL,"

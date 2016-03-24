@@ -23,4 +23,5 @@
     <string name="category_yelp_poi_button">Choose a Category</string>
     <string name="save_yelp_poi_button">Save</string>
     <string name="exit_yelp_poi_button">Exit</string>
+    <string name="note_yelp_poi">Write a Note</string>
 </resources>
