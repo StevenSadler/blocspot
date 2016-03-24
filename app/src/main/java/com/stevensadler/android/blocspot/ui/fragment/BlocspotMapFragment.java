@@ -12,12 +12,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -34,10 +38,14 @@ public class BlocspotMapFragment extends SupportMapFragment implements
 
     private static List<PointOfInterest> mPointsOfInterest;
     private static List<PointOfInterest> mYelpPointsOfInterest;
+    private static List<Marker> mMarkerList;
+    private static HashMap<Marker, PointOfInterest> mYelpMarkerHashMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMarkerList = new ArrayList<>();
+        mYelpMarkerHashMap = new HashMap<>();
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mYelpPointsOfInterest = BlocspotApplication.getSharedDataSource().getYelpPointsOfInterest();
         initMap();
@@ -62,29 +70,71 @@ public class BlocspotMapFragment extends SupportMapFragment implements
         getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
+
+                // clean up the markers and lists from previous runs
                 googleMap.clear();
+                for (Marker marker : mMarkerList) {
+                    marker.remove();
+                }
+                mMarkerList.clear();
+                mYelpMarkerHashMap.clear();
+                for (Map.Entry<Marker, PointOfInterest> entry : mYelpMarkerHashMap.entrySet()) {
+                    // do something
+                }
+
+                // add real markers for saved POI's
                 for (PointOfInterest pointOfInterest : mPointsOfInterest) {
-                    showMarker(googleMap, pointOfInterest, true);
+                    Marker marker = showMarker(googleMap, pointOfInterest, false);
+                    mMarkerList.add(marker);
                 }
+
+                // add yelp markers for unsaved yelp POI's
+                //final HashMap<Marker, PointOfInterest> yelpHashMap = new HashMap<Marker, PointOfInterest>();
                 for (PointOfInterest yelpPointOfInterest : mYelpPointsOfInterest) {
-                    showMarker(googleMap, yelpPointOfInterest, false);
+                    Marker marker = showMarker(googleMap, yelpPointOfInterest, false);
+
+                    // remove the the yelp marker if it is a dupe of a real marker
+                    // otherwise add it to the hashmap
+                    if (mMarkerList.contains(marker)) {
+                        marker.remove();
+                    } else {
+                        mYelpMarkerHashMap.put(marker, yelpPointOfInterest);
+                    }
                 }
+
                 if (mYelpPointsOfInterest.size() > 0) {
                     LatLng cameraLatLng = new LatLng(mYelpPointsOfInterest.get(0).getLatitude(),
                             mYelpPointsOfInterest.get(0).getLongitude());
-
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 14));
+
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker clickedMarker) {
+                            for (Map.Entry<Marker, PointOfInterest> entry : mYelpMarkerHashMap.entrySet()) {
+                                if (clickedMarker.equals(entry.getKey())) {
+                                    Log.v(TAG, "onMarkerClick Yelp POI " + entry.getValue().getTitle());
+                                    IYelpPointOfInterestInput activity =
+                                            (IYelpPointOfInterestInput) getActivity();
+                                    activity.onSelectYelpPointOfInterest(entry.getValue());
+
+                                    return true;
+                                }
+                            }
+
+                            return false;
+                        }
+                    });
                 } else if (mPointsOfInterest.size() > 0) {
                     LatLng cameraLatLng = new LatLng(mPointsOfInterest.get(0).getLatitude(),
                             mPointsOfInterest.get(0).getLongitude());
-
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 15));
                 }
+
             }
         });
     }
 
-    private void showMarker(GoogleMap googleMap, PointOfInterest pointOfInterest, Boolean showCircle) {
+    private Marker showMarker(GoogleMap googleMap, PointOfInterest pointOfInterest, Boolean showCircle) {
         LatLng latLng = new LatLng(pointOfInterest.getLatitude(), pointOfInterest.getLongitude());
         Category category = BlocspotApplication.getSharedDataSource()
                 .getCategoryWithRowId(pointOfInterest.getCategoryId());
@@ -95,7 +145,7 @@ public class BlocspotMapFragment extends SupportMapFragment implements
         ColorUtils.colorToHSL(color, hsl);
         float hue = hsl[0];
 
-        googleMap.addMarker(new MarkerOptions()
+        Marker marker = googleMap.addMarker(new MarkerOptions()
                 .title(pointOfInterest.getTitle())
                 .position(latLng)
                 .icon(BitmapDescriptorFactory.defaultMarker(hue)));
@@ -108,5 +158,22 @@ public class BlocspotMapFragment extends SupportMapFragment implements
                     .strokeColor(Color.TRANSPARENT)
                     .strokeWidth(2));
         }
+
+        return marker;
     }
+
+//    /*
+//     * ItemListAdapter.Delegate
+//     */
+//    @Override
+//    public void onItemClicked(PointOfInterest pointOfInterest) {
+//        Log.v(TAG, "onItemClicked");
+//    }
+//
+//    @Override
+//    public void onItemLongClicked(PointOfInterest pointOfInterest) {
+//        Log.v(TAG, "onItemLongClicked ");
+//        IPointOfInterestInput activity = (IPointOfInterestInput) getActivity();
+//        activity.onSelectPointOfInterest(pointOfInterest);
+//    }
 }

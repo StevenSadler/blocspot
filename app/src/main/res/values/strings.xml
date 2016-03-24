@@ -19,4 +19,8 @@
     <string name="prompt_category">Enter a category</string>
 
     <string name="action_choose_category">Choose a Category</string>
+
+    <string name="category_yelp_poi_button">Choose a Category</string>
+    <string name="save_yelp_poi_button">Save</string>
+    <string name="exit_yelp_poi_button">Exit</string>
 </resources>

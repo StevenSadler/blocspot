@@ -31,8 +31,9 @@ public class DataSource extends Observable {
 
     // ChooseCategory modes
     final public static int NO_MODE = 1;
-    final public static int ASSIGN_CATEGORY = 2;
-    final public static int FILTER_BY_CATEGORY = 3;
+    final public static int ASSIGN_YELP_CATEGORY = 2;
+    final public static int ASSIGN_CATEGORY = 3;
+    final public static int FILTER_BY_CATEGORY = 4;
 
     private DatabaseOpenHelper mDatabaseOpenHelper;
     private PointOfInterestTable mPointOfInterestTable;
@@ -212,7 +213,6 @@ public class DataSource extends Observable {
         clearChanged();
     }
 
-
     public void devChangePOICategoryId() {
         // change categoryId value in PointOfInterestTable cursor for a POI
         // update the POI model in the list
@@ -226,12 +226,64 @@ public class DataSource extends Observable {
      * Point of Interest functions
      */
 
+    public void saveYelpPointOfInterest() {
+        insertPointOfInterest(mSelectedPOI, null);
+        mPointsOfInterest = readPointOfInterestTableToModel();
+    }
+    public void clearYelpPointsOfInterest() {
+        mYelpPointsOfInterest.clear();
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+    public void saveYelpPointOfInterestWithCategory(Category category) {
+        // insert the selected yelp poi into the db and read into model list with poi row id
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory categoryId.getRowId = " + category.getRowId());
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory mSelectedPOI before any change = " + mSelectedPOI.getCategoryId());
+
+        mSelectedPOI.setCategoryId(category.getRowId());
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory mSelectedPOI after change = " + mSelectedPOI.getCategoryId());
+
+        long poiRowId = insertPointOfInterest(mSelectedPOI, null);
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory poiRowId = " + poiRowId);
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory mSelectedPOI.getRowId = " + mSelectedPOI.getRowId());
+
+        mPointsOfInterest = readPointOfInterestTableToModel();
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory mSelectedPOI after insert categoryId = " + mSelectedPOI.getCategoryId());
+
+
+
+
+//
+//        Cursor cursor = getCursorOfInsertedPOIWithRowId(poiRowId);
+//        PointOfInterest poi = DataSource.pointOfInterestFromCursor(cursor);
+//        Log.v(TAG, "saveYelpPointOfInterestWithCategory cursor poi after insert categoryId = " + poi.getCategoryId());
+
+
+        // remove the yelp pois but do not notify observers yet
+        mYelpPointsOfInterest.clear();
+
+        // add the category to the selected poi and set its category id
+        // do not read poi table or category table, since no changes have been made since last read
+        // lastly, notify observers
+        //setPOICategory(category, mSelectedPOI);
+
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+
     public long insertPointOfInterest(PointOfInterest pointOfInterest, SQLiteDatabase writableDatabase) {
         PointOfInterestTable.Builder builder = new PointOfInterestTable.Builder()
                 .setTitle(pointOfInterest.getTitle())
                 .setGUID(pointOfInterest.getGuid())
                 .setLatitude(pointOfInterest.getLatitude())
-                .setLongitude(pointOfInterest.getLongitude());
+                .setLongitude(pointOfInterest.getLongitude())
+                .setCategoryId(pointOfInterest.getCategoryId());
 
         long rowId;
         if (writableDatabase == null) {
