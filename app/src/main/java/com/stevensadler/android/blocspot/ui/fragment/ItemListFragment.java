@@ -41,7 +41,7 @@ public class ItemListFragment extends Fragment implements
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mCategories = BlocspotApplication.getSharedDataSource().getCategories();
 
-        mItemListAdapter = new ItemListAdapter(mPointsOfInterest, mCategories);
+        mItemListAdapter = new ItemListAdapter(getResources(), mPointsOfInterest, mCategories);
         mItemListAdapter.setDelegate(this);
     }
 
@@ -61,8 +61,25 @@ public class ItemListFragment extends Fragment implements
      * ItemListAdapter.Delegate
      */
     @Override
+    public void onVisitedClicked(PointOfInterest pointOfInterest) {
+        Log.v(TAG, "onVisitedClicked");
+        IPointOfInterestInput activity = (IPointOfInterestInput) getActivity();
+        activity.onVisitedPointOfInterest(pointOfInterest);
+        activity.onMapFindPointOfInterest(pointOfInterest);
+    }
+
+    @Override
+    public void onDeleteClicked(PointOfInterest pointOfInterest) {
+        Log.v(TAG, "onDeleteClicked");
+        IPointOfInterestInput activity = (IPointOfInterestInput) getActivity();
+        activity.onDeletePointOfInterest(pointOfInterest);
+    }
+
+    @Override
     public void onItemClicked(PointOfInterest pointOfInterest) {
-        Log.v(TAG, "onItemClicked");
+        Log.v(TAG, "onItemClicked ");
+        IPointOfInterestInput activity = (IPointOfInterestInput) getActivity();
+        activity.onMapFindPointOfInterest(pointOfInterest);
     }
 
     @Override
@@ -82,8 +99,12 @@ public class ItemListFragment extends Fragment implements
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mCategories = BlocspotApplication.getSharedDataSource().getCategories();
 
-        mItemListAdapter = new ItemListAdapter(mPointsOfInterest, mCategories);
-        mItemListAdapter.setDelegate(this);
-        mRecyclerView.setAdapter(mItemListAdapter);
+        if (isAdded()) {
+            mItemListAdapter = new ItemListAdapter(getResources(), mPointsOfInterest, mCategories);
+            mItemListAdapter.setDelegate(this);
+            mRecyclerView.setAdapter(mItemListAdapter);
+        } else {
+            Log.d(TAG, "update  ItemListFragment is not added to its activity");
+        }
     }
 }

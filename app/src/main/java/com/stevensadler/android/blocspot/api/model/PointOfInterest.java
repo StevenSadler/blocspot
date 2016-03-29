@@ -10,6 +10,7 @@ public class PointOfInterest {
     public static String DEFAULT_GUID = "default_guid";
     public static String DEFAULT_TITLE = "default_title";
     public static String DEFAULT_NOTE = "default_note";
+    public static Boolean DEFAULT_VISITED = false;
     public static float DEFAULT_LATITUDE = 38.0f;     // Point Reyes
     public static float DEFAULT_LONGITUDE = -123.0f;  // Point Reyes
     public static float DEFAULT_RADIUS = 1000f;       // meters
@@ -19,6 +20,7 @@ public class PointOfInterest {
     private String guid;
     private String title;
     private String note;
+    private Boolean visited;
     private float latitude;
     private float longitude;
     private float radiusMeters;
@@ -38,6 +40,7 @@ public class PointOfInterest {
         this.guid = DEFAULT_GUID;
         this.title = DEFAULT_TITLE;
         this.note = DEFAULT_NOTE;
+        this.visited = DEFAULT_VISITED;
         this.latitude = DEFAULT_LATITUDE;
         this.longitude = DEFAULT_LONGITUDE;
         this.radiusMeters = DEFAULT_RADIUS;
@@ -66,6 +69,11 @@ public class PointOfInterest {
 
     public PointOfInterest setNote(String note) {
         this.note = note;
+        return this;
+    }
+
+    public PointOfInterest setVisited(Boolean visited) {
+        this.visited = visited;
         return this;
     }
 
@@ -99,6 +107,7 @@ public class PointOfInterest {
     public String getNote() {
         return note;
     }
+    public Boolean getVisited() { return visited; }
     public float getLatitude() {
         return latitude;
     }

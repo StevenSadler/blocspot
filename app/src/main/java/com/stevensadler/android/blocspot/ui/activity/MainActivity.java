@@ -92,13 +92,16 @@ public class MainActivity extends AppCompatActivity implements
         mGeofences = new ArrayList<Geofence>();
         for (int i = 0; i < mPointsOfInterest.size(); i++) {
             PointOfInterest poi = mPointsOfInterest.get(i);
-            mGeofences.add(new Geofence.Builder()
-                            .setRequestId(""+poi.getRowId())
-                            .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
-                            .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                                    Geofence.GEOFENCE_TRANSITION_EXIT)
-                            .build());
+            if (!poi.getVisited()) {
+                mGeofences.add(new Geofence.Builder()
+                        .setRequestId("" + poi.getRowId())
+                        .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
+                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                Geofence.GEOFENCE_TRANSITION_EXIT)
+                        .build());
+            }
+
         }
         mGeofenceStore = new GeofenceStore(this, mGeofences);
 
@@ -257,6 +260,38 @@ public class MainActivity extends AppCompatActivity implements
 
         ChooseCategoryDialogFragment dialogFragment = new ChooseCategoryDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "choose category");
+    }
+    @Override
+    public void onVisitedPointOfInterest(PointOfInterest poi) {
+        BlocspotApplication.getSharedDataSource().toggleVisited(poi);
+
+        // this section needs lots of testing
+        if (poi.getVisited()) {
+            // remove the Geofence
+            mGeofenceStore.removeSingleGeofence(""+poi.getRowId());
+        } else {
+            // add a Geofence
+            Geofence geofence = new Geofence.Builder()
+                    .setRequestId("" + poi.getRowId())
+                    .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
+                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build();
+
+            mGeofenceStore.addSingleGeofence(geofence, ""+poi.getRowId());
+        }
+    }
+    @Override
+    public void onDeletePointOfInterest(PointOfInterest pointOfInterest) {
+        BlocspotApplication.getSharedDataSource().deletePointOfInterest(pointOfInterest);
+    }
+    @Override
+    public void onMapFindPointOfInterest(PointOfInterest pointOfInterest) {
+        mViewPager.setCurrentItem(1, true);
+        ViewPagerAdapter adapter = (ViewPagerAdapter) mViewPager.getAdapter();
+        BlocspotMapFragment mapFragment = (BlocspotMapFragment) adapter.getItem(1);
+        mapFragment.moveCameraToPointOfInterest(pointOfInterest);
     }
 
     /*

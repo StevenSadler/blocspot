@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_poi_item"
     android:orientation="horizontal"
@@ -7,17 +7,46 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/iv_poi_item_visited"
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
+
     <View
         android:id="@+id/v_poi_item_category_swatch"
+        android:layout_toRightOf="@+id/iv_poi_item_visited"
         android:layout_width="30dp"
         android:layout_height="30dp"/>
 
     <TextView
         android:id="@+id/tv_poi_item_title"
+        android:layout_toRightOf="@+id/v_poi_item_category_swatch"
+        android:layout_toLeftOf="@+id/iv_poi_item_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show a POI Item"
+        android:text="Show a POI Item Title"
+        android:textSize="18dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_poi_item_note"
+        android:layout_toRightOf="@+id/v_poi_item_category_swatch"
+        android:layout_below="@+id/tv_poi_item_title"
+        android:layout_toLeftOf="@+id/iv_poi_item_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show a POI Item Note"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
+    <ImageView
+        android:id="@+id/iv_poi_item_delete"
+
+        android:layout_alignParentRight="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
+
+    <!--android:layout_toRightOf="@+id/tv_poi_item_title"-->
+
+</RelativeLayout>

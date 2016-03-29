@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.stevensadler.android.blocspot.R;
 import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
@@ -70,7 +71,6 @@ public class BlocspotMapFragment extends SupportMapFragment implements
         getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-
                 // clean up the markers and lists from previous runs
                 googleMap.clear();
                 for (Marker marker : mMarkerList) {
@@ -85,7 +85,12 @@ public class BlocspotMapFragment extends SupportMapFragment implements
                 // add real markers for saved POI's
                 for (PointOfInterest pointOfInterest : mPointsOfInterest) {
                     Marker marker = showMarker(googleMap, pointOfInterest, false);
-                    mMarkerList.add(marker);
+
+                    if (mMarkerList.contains(marker)) {
+                        marker.remove();
+                    } else {
+                        mMarkerList.add(marker);
+                    }
                 }
 
                 // add yelp markers for unsaved yelp POI's
@@ -102,11 +107,9 @@ public class BlocspotMapFragment extends SupportMapFragment implements
                     }
                 }
 
+                PointOfInterest selectedPOI = null;
                 if (mYelpPointsOfInterest.size() > 0) {
-                    LatLng cameraLatLng = new LatLng(mYelpPointsOfInterest.get(0).getLatitude(),
-                            mYelpPointsOfInterest.get(0).getLongitude());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 14));
-
+                    selectedPOI = mYelpPointsOfInterest.get(0);
                     googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker clickedMarker) {
@@ -125,11 +128,13 @@ public class BlocspotMapFragment extends SupportMapFragment implements
                         }
                     });
                 } else if (mPointsOfInterest.size() > 0) {
-                    LatLng cameraLatLng = new LatLng(mPointsOfInterest.get(0).getLatitude(),
-                            mPointsOfInterest.get(0).getLongitude());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 15));
+                    selectedPOI = mPointsOfInterest.get(0);
                 }
 
+                if (selectedPOI != null) {
+                    LatLng cameraLatLng = new LatLng(selectedPOI.getLatitude(), selectedPOI.getLongitude());
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 14));
+                }
             }
         });
     }
@@ -147,9 +152,15 @@ public class BlocspotMapFragment extends SupportMapFragment implements
 
         MarkerOptions markerOptions = new MarkerOptions()
                 .title(pointOfInterest.getTitle())
-                .position(latLng)
-                .icon(BitmapDescriptorFactory.defaultMarker(hue));
+                .position(latLng);
 
+        if (pointOfInterest.getVisited()){
+            markerOptions = markerOptions
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_beenhere_black_24dp));
+        } else {
+            markerOptions = markerOptions
+                    .icon(BitmapDescriptorFactory.defaultMarker(hue));
+        }
         if (!pointOfInterest.getNote().equals(PointOfInterest.DEFAULT_NOTE)) {
             markerOptions = markerOptions.snippet(pointOfInterest.getNote());
         }
@@ -165,6 +176,15 @@ public class BlocspotMapFragment extends SupportMapFragment implements
         }
 
         return marker;
+    }
+
+    public void moveCameraToPointOfInterest(PointOfInterest pointOfInterest) {
+        GoogleMap map = getMap();
+        if (map != null) {
+            LatLng cameraLatLng = new LatLng(pointOfInterest.getLatitude(),
+                    pointOfInterest.getLongitude());
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 14));
+        }
     }
 
 //    /*

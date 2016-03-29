@@ -35,6 +35,11 @@ public class PointOfInterestTable extends Table {
             return this;
         }
 
+        public Builder setVisited(Boolean visited) {
+            values.put(COLUMN_VISITED, (visited) ? 1 : 0);
+            return this;
+        }
+
         public Builder setLatitude(float latitude) {
             values.put(COLUMN_LATITUDE, latitude);
             return this;
@@ -68,6 +73,7 @@ public class PointOfInterestTable extends Table {
     public static String getNote(Cursor cursor) {
         return getString(cursor, COLUMN_NOTE);
     }
+    public static Boolean getVisited(Cursor cursor) { return getBoolean(cursor, COLUMN_VISITED); }
     public static float getLatitude(Cursor cursor) {
         return getFloat(cursor, COLUMN_LATITUDE);
     }
@@ -84,6 +90,7 @@ public class PointOfInterestTable extends Table {
     private static final String COLUMN_CATEGORY_ID = "category_id";
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_NOTE = "note";
+    private static final String COLUMN_VISITED = "visited";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
     private static final String COLUMN_RADIUS = "geofence_radius";
@@ -100,6 +107,7 @@ public class PointOfInterestTable extends Table {
                 + COLUMN_GUID + " TEXT,"
                 + COLUMN_TITLE + " TEXT,"
                 + COLUMN_NOTE + " TEXT,"
+                + COLUMN_VISITED + " INTEGER,"
                 + COLUMN_LATITUDE + " REAL,"
                 + COLUMN_LONGITUDE + " REAL,"
                 + COLUMN_RADIUS + " REAL,"
@@ -144,5 +152,15 @@ public class PointOfInterestTable extends Table {
         ContentValues values = new ContentValues();
         values.put(COLUMN_CATEGORY_ID, category.getRowId());
         return writableDatabase.update(NAME, values, COLUMN_ID + " = " + rowId, null);
+    }
+
+    public int updateVisited(SQLiteDatabase writableDatabase, Boolean visited, long rowId) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_VISITED, (visited) ? 1 : 0);
+        return writableDatabase.update(NAME, values, COLUMN_ID + " = " + rowId, null);
+    }
+
+    public int deleteRow(SQLiteDatabase writableDatabase, long rowId) {
+        return writableDatabase.delete(NAME, COLUMN_ID + " = " + rowId, null);
     }
 }

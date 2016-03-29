@@ -7,7 +7,7 @@ public class Category {
 
     public static long DEFAULT_ROWID = -99l;
     public static String DEFAULT_TITLE = "default_title";
-    public static int DEFAULT_COLOR = 0xFF0000FF;
+    public static int DEFAULT_COLOR = 0xFFFF0000; // 0xFF0000FF;
 
     private long rowId;
     private String title;
