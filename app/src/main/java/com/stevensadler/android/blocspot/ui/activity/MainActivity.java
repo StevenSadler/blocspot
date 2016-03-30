@@ -5,28 +5,34 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.gms.location.Geofence;
 import com.stevensadler.android.blocspot.R;
+import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.geofence.GeofenceStore;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 import com.stevensadler.android.blocspot.ui.adapter.ViewPagerAdapter;
 import com.stevensadler.android.blocspot.ui.fragment.BlocspotMapFragment;
 import com.stevensadler.android.blocspot.ui.fragment.ItemListFragment;
+import com.stevensadler.android.blocspot.ui.fragment.SaveCategoryDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        SaveCategoryDialogFragment.SaveCategoryDialogListener {
+
+    private static String TAG = MainActivity.class.getSimpleName();
 
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
-    private ArrayList<String> mStaleGeofenceIds;
+//    private ArrayList<String> mStaleGeofenceIds;
     private ArrayList<Geofence> mGeofences;
     private GeofenceStore mGeofenceStore;
     private List<PointOfInterest> mPointsOfInterest;
@@ -47,23 +53,12 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
 
-//       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//
-//                BlocspotApplication.getSharedDataSource().testDatabase();
-//            }
-//        });
-
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mGeofences = new ArrayList<Geofence>();
-        mStaleGeofenceIds = new ArrayList<String>();
+//        mStaleGeofenceIds = new ArrayList<String>();
         for (int i = 0; i < mPointsOfInterest.size(); i++) {
             PointOfInterest poi = mPointsOfInterest.get(i);
-            mStaleGeofenceIds.add(""+poi.getRowId());
+//            mStaleGeofenceIds.add(""+poi.getRowId());
             mGeofences.add(new Geofence.Builder()
                             .setRequestId(""+poi.getRowId())
                             .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
@@ -72,8 +67,9 @@ public class MainActivity extends AppCompatActivity {
                                     Geofence.GEOFENCE_TRANSITION_EXIT)
                             .build());
         }
-        mStaleGeofenceIds.add("default_guid");
-        mGeofenceStore = new GeofenceStore(this, mGeofences, mStaleGeofenceIds);
+//        mStaleGeofenceIds.add("default_guid");
+//        mGeofenceStore = new GeofenceStore(this, mGeofences, mStaleGeofenceIds);
+        mGeofenceStore = new GeofenceStore(this, mGeofences);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -103,5 +99,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onMenuAddCategoryClick(MenuItem menuItem) {
+        Log.d(TAG, "onMenuAddCategoryClick");
+
+        SaveCategoryDialogFragment dialogFragment = new SaveCategoryDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "Save Category Dialog Fragment");
+    }
+
+    /*
+     * SaveCategoryDialogFragment.SaveCategoryDialogListener
+     */
+    @Override
+    public void onFinishSaveCategoryDialog(String inputText, int color) {
+        Log.v(TAG, "onFinishSaveCategoryDialog  do something");
+        // need to create a new category
+        // save it to the model list
+        // save it to the db table
+        Category category = new Category()
+                .setTitle(inputText)
+                .setColor(color);
+
+        BlocspotApplication.getSharedDataSource().createAndInsertCategory(category);
+
+
+        //BlocspotApplication.getSharedDataSource().insertCategory(category, writeableDatabase);
     }
 }

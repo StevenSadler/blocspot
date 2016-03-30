@@ -17,7 +17,7 @@ public abstract class Table {
     public abstract String getName();
     public abstract String getCreateStatement();
 
-    public void onUpgrade(SQLiteDatabase writeableDatabase, int oldversion, int newversion) {}
+    abstract public void onUpgrade(SQLiteDatabase writableDatabase, int oldversion, int newversion);
 
     public Cursor fetchRow(SQLiteDatabase readonlyDatabase, long rowId) {
         return readonlyDatabase.query(true, getName(), null, COLUMN_ID + " = ?",
@@ -50,6 +50,14 @@ public abstract class Table {
             return Float.NaN;
         }
         return cursor.getFloat(columnIndex);
+    }
+
+    protected static int getInt(Cursor cursor, String column) {
+        int columnIndex = cursor.getColumnIndex(column);
+        if (columnIndex == -1) {
+            return -1;
+        }
+        return cursor.getInt(columnIndex);
     }
 
     protected static boolean getBoolean(Cursor cursor, String column) {

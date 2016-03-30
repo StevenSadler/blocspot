@@ -5,7 +5,7 @@ package com.stevensadler.android.blocspot.api.model;
  */
 public class PointOfInterest {
 
-    public static long DEFAULT_ROWID = -1l;
+    public static long DEFAULT_ROWID = -99l;
     public static String DEFAULT_GUID = "default_guid";
     public static String DEFAULT_TITLE = "default_title";
     public static float DEFAULT_LATITUDE = 38.0f;     // Point Reyes

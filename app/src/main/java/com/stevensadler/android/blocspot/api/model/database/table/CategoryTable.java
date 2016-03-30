@@ -5,36 +5,21 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Created by Steven on 2/17/2016.
+ * Created by Steven on 3/2/2016.
  */
-public class PointOfInterestTable extends Table {
+public class CategoryTable extends Table {
 
     public static class Builder implements Table.Builder {
 
         ContentValues values = new ContentValues();
-
-        public Builder setGUID(String guid) {
-            values.put(COLUMN_GUID, guid);
-            return this;
-        }
 
         public Builder setTitle(String title) {
             values.put(COLUMN_TITLE, title);
             return this;
         }
 
-        public Builder setLatitude(float latitude) {
-            values.put(COLUMN_LATITUDE, latitude);
-            return this;
-        }
-
-        public Builder setLongitude(float longitude) {
-            values.put(COLUMN_LONGITUDE, longitude);
-            return this;
-        }
-
-        public Builder setRadius(float radius) {
-            values.put(COLUMN_RADIUS, radius);
+        public Builder setColor(int color) {
+            values.put(COLUMN_COLOR, color);
             return this;
         }
 
@@ -44,44 +29,29 @@ public class PointOfInterestTable extends Table {
         }
     }
 
-    public static String getGUID(Cursor cursor) {
-        return getString(cursor, COLUMN_GUID);
-    }
     public static String getTitle(Cursor cursor) {
         return getString(cursor, COLUMN_TITLE);
     }
-    public static float getLatitude(Cursor cursor) {
-        return getFloat(cursor, COLUMN_LATITUDE);
-    }
-    public static float getLongitude(Cursor cursor) {
-        return getFloat(cursor, COLUMN_LONGITUDE);
-    }
-    public static float getRadius(Cursor cursor) {
-        return getFloat(cursor, COLUMN_RADIUS);
+    public static int getColor(Cursor cursor) {
+        return getInt(cursor, COLUMN_COLOR);
     }
 
-    private static final String NAME = "points_of_interest";
+    private static final String NAME = "categories";
 
-    private static final String COLUMN_GUID = "guid";
     private static final String COLUMN_TITLE = "title";
-    private static final String COLUMN_LATITUDE = "latitude";
-    private static final String COLUMN_LONGITUDE = "longitude";
-    private static final String COLUMN_RADIUS = "geofence_radius";
+    private static final String COLUMN_COLOR = "color";
 
     @Override
     public String getName() {
-        return PointOfInterestTable.NAME;
+        return CategoryTable.NAME;
     }
 
     @Override
     public String getCreateStatement() {
         return "CREATE TABLE IF NOT EXISTS " + getName() + " ("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
-                + COLUMN_GUID + " TEXT,"
                 + COLUMN_TITLE + " TEXT,"
-                + COLUMN_LATITUDE + " REAL,"
-                + COLUMN_LONGITUDE + " REAL,"
-                + COLUMN_RADIUS + " REAL)";
+                + COLUMN_COLOR + " INTEGER)";
     }
 
     @Override
@@ -99,13 +69,10 @@ public class PointOfInterestTable extends Table {
             case 1:
                 writableDatabase.execSQL("CREATE TABLE " + getName() + " ("
                         + COLUMN_ID + " INTEGER PRIMARY KEY,"
-                        + COLUMN_GUID + " TEXT,"
-                        + COLUMN_TITLE + " TEXT,"
-                        + COLUMN_LATITUDE + " REAL,"
-                        + COLUMN_LONGITUDE + " REAL)");
+                        + COLUMN_TITLE + " TEXT)");
             case 2:
                 writableDatabase.execSQL("ALTER TABLE " + getName()
-                        + "ADD COLUMN " + COLUMN_RADIUS + " REAL");
+                        + "ADD COLUMN " + COLUMN_COLOR + " INTEGER");
             default:
                 break;
         }
@@ -115,5 +82,14 @@ public class PointOfInterestTable extends Table {
         return readonlyDatabase.query(true, getName(), null, null,
                 null,
                 null, null, null, null);
+//        try {
+//            return readonlyDatabase.query(true, getName(), null, null,
+//                    null,
+//                    null, null, null, null);
+//        } catch (SQLiteException e) {
+//            // if the DB does not have a table named getName(),
+//            // then it will throw a SQLiteException
+//            return null;
+//        }
     }
 }

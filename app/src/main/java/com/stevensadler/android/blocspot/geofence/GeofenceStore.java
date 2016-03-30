@@ -37,12 +37,13 @@ public class GeofenceStore implements
     private ArrayList<Geofence> mGeofences;
     private GeofencingRequest mGeofencingRequest;
     private LocationRequest mLocationRequest;
-    private ArrayList<String> mStaleGeofenceIds;
+//    private ArrayList<String> mStaleGeofenceIds;
 
-    public GeofenceStore(Context context, ArrayList<Geofence> geofences, ArrayList<String> staleGeofenceIds) {
+//    public GeofenceStore(Context context, ArrayList<Geofence> geofences, ArrayList<String> staleGeofenceIds) {
+    public GeofenceStore(Context context, ArrayList<Geofence> geofences) {
         mContext = context;
         mGeofences = new ArrayList<Geofence>(geofences);
-        mStaleGeofenceIds = new ArrayList<String>(staleGeofenceIds);
+//        mStaleGeofenceIds = new ArrayList<String>(staleGeofenceIds);
         mPendingIntent = null;
 
         // Build a new GoogleApiClient, specify that we want to use LocationServices
@@ -91,7 +92,7 @@ public class GeofenceStore implements
 
         // submit the request to remove stale geofences
         PendingResult<Status> pendingRemoveResult = LocationServices.GeofencingApi
-                .removeGeofences(mGoogleApiClient, mStaleGeofenceIds);
+                .removeGeofences(mGoogleApiClient, mPendingIntent);
 
         pendingRemoveResult.setResultCallback(new ResultCallback<Status>() {
             @Override
