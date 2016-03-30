@@ -9,6 +9,7 @@ public class PointOfInterest {
     public static long DEFAULT_CATEGORY_ID = -99l;
     public static String DEFAULT_GUID = "default_guid";
     public static String DEFAULT_TITLE = "default_title";
+    public static String DEFAULT_NOTE = "default_note";
     public static float DEFAULT_LATITUDE = 38.0f;     // Point Reyes
     public static float DEFAULT_LONGITUDE = -123.0f;  // Point Reyes
     public static float DEFAULT_RADIUS = 1000f;       // meters
@@ -17,6 +18,7 @@ public class PointOfInterest {
     private long categoryId;
     private String guid;
     private String title;
+    private String note;
     private float latitude;
     private float longitude;
     private float radiusMeters;
@@ -35,6 +37,7 @@ public class PointOfInterest {
         this.categoryId = DEFAULT_CATEGORY_ID;
         this.guid = DEFAULT_GUID;
         this.title = DEFAULT_TITLE;
+        this.note = DEFAULT_NOTE;
         this.latitude = DEFAULT_LATITUDE;
         this.longitude = DEFAULT_LONGITUDE;
         this.radiusMeters = DEFAULT_RADIUS;
@@ -58,6 +61,11 @@ public class PointOfInterest {
 
     public PointOfInterest setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public PointOfInterest setNote(String note) {
+        this.note = note;
         return this;
     }
 
@@ -87,6 +95,9 @@ public class PointOfInterest {
     }
     public String getTitle() {
         return title;
+    }
+    public String getNote() {
+        return note;
     }
     public float getLatitude() {
         return latitude;
