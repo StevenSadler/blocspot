@@ -6,6 +6,7 @@ package com.stevensadler.android.blocspot.api.model;
 public class PointOfInterest {
 
     public static long DEFAULT_ROWID = -99l;
+    public static long DEFAULT_CATEGORY_ID = -99l;
     public static String DEFAULT_GUID = "default_guid";
     public static String DEFAULT_TITLE = "default_title";
     public static float DEFAULT_LATITUDE = 38.0f;     // Point Reyes
@@ -13,6 +14,7 @@ public class PointOfInterest {
     public static float DEFAULT_RADIUS = 1000f;       // meters
 
     private long rowId;
+    private long categoryId;
     private String guid;
     private String title;
     private float latitude;
@@ -30,6 +32,7 @@ public class PointOfInterest {
     // constructor is a builder
     public PointOfInterest() {
         this.rowId = DEFAULT_ROWID;
+        this.categoryId = DEFAULT_CATEGORY_ID;
         this.guid = DEFAULT_GUID;
         this.title = DEFAULT_TITLE;
         this.latitude = DEFAULT_LATITUDE;
@@ -40,6 +43,11 @@ public class PointOfInterest {
 
     public PointOfInterest setRowId(long rowId) {
         this.rowId = rowId;
+        return this;
+    }
+
+    public PointOfInterest setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
         return this;
     }
 
@@ -68,24 +76,24 @@ public class PointOfInterest {
         return this;
     }
 
-    public long getRowId() { return rowId; }
-
+    public long getRowId() {
+        return rowId;
+    }
+    public long getCategoryId() {
+        return categoryId;
+    }
     public String getGuid() {
         return guid;
     }
-
     public String getTitle() {
         return title;
     }
-
     public float getLatitude() {
         return latitude;
     }
-
     public float getLongitude() {
         return longitude;
     }
-
     public float getRadius() {
         return radiusMeters;
     }

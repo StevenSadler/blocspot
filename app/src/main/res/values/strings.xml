@@ -8,4 +8,6 @@
     <string name="random_color_button">Random Color</string>
     <string name="action_save_category">Save a Category</string>
     <string name="prompt_category">Enter a category</string>
+
+    <string name="action_choose_category">Choose a Category</string>
 </resources>

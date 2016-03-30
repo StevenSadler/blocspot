@@ -14,13 +14,19 @@ import com.stevensadler.android.blocspot.api.model.database.table.PointOfInteres
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by Steven on 2/17/2016.
  */
-public class DataSource {
+public class DataSource extends Observable {
 
     private static String TAG = DataSource.class.getSimpleName();
+
+    // ChooseCategory modes
+    final public static int NO_MODE = 1;
+    final public static int SET_POI_CATEGORY = 2;
+    final public static int SET_FILTER = 3;
 
     private DatabaseOpenHelper mDatabaseOpenHelper;
     private PointOfInterestTable mPointOfInterestTable;
@@ -28,6 +34,9 @@ public class DataSource {
 
     private List<PointOfInterest> mPointsOfInterest;
     private List<Category> mCategories;
+
+    private PointOfInterest mSelectedPOI;
+    private int mChooseCategoryMode = NO_MODE;
 
     public DataSource(Context context) {
         mPointOfInterestTable = new PointOfInterestTable();
@@ -38,6 +47,12 @@ public class DataSource {
         //context.deleteDatabase("blocspot_db");
         mPointsOfInterest = readPointOfInterestTableToModel();
         mCategories = readCategoryTableToModel();
+
+        // only use this while in dev
+//        devChangePOICategoryId();
+//        mPointsOfInterest = readPointOfInterestTableToModel();
+//        Log.v(TAG, "constructor end after devChange");
+
 
         /*
          * This section should be uncommented and re-run after an app uninstall
@@ -71,6 +86,56 @@ public class DataSource {
         return mCategories;
     }
 
+    public void setSelectedPOI(PointOfInterest pointOfInterest) {
+        mSelectedPOI = pointOfInterest;
+    }
+    public PointOfInterest getSelectedPOI() {
+        return mSelectedPOI;
+    }
+    public void setChooseCategoryMode(int mode) {
+        mChooseCategoryMode = mode;
+    }
+    public int getChooseCategoryMode() {
+        return mChooseCategoryMode;
+    }
+    public void setPOICategory(Category category, PointOfInterest pointOfInterest) {
+        // update the table
+        SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
+        long categoryId = category.getRowId();
+        long poiRowId = pointOfInterest.getRowId();
+        int updatedRowCount = mPointOfInterestTable.updateCategoryId(writableDatabase, category, poiRowId);
+        Log.v(TAG, "setPOICategory   updatedRowCount = " + updatedRowCount);
+        //writableDatabase.close();
+
+        // verify the cursor has changed
+        Cursor cursor = getCursorOfInsertedPOIWithRowId(poiRowId);
+        cursor.moveToFirst();
+        long catId = PointOfInterestTable.getCategoryId(cursor);
+        Log.v(TAG, "setPOICategory   before = " + categoryId + "    after = " + catId);
+
+        //mPointsOfInterest = readPointOfInterestTableToModel();
+        //PointOfInterest newPOI = mPointsOfInterest.get
+
+        // update the model list
+        //Log.v(TAG, "setPOICategory   before = " + categoryId + "    after = " + catId);
+        pointOfInterest.setCategoryId(categoryId);
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+
+
+    public void devChangePOICategoryId() {
+        // change categoryId value in PointOfInterestTable cursor for a POI
+        // update the POI model in the list
+        //
+        PointOfInterest pointOfInterest = mPointsOfInterest.get(0);
+        Category category = mCategories.get(0);
+        setPOICategory(category, pointOfInterest);
+    }
+
     /*
      * Point of Interest functions
      */
@@ -97,6 +162,7 @@ public class DataSource {
 
     public static PointOfInterest pointOfInterestFromCursor(Cursor cursor) {
         return new PointOfInterest()
+                .setCategoryId(PointOfInterestTable.getCategoryId(cursor))
                 .setRowId(PointOfInterestTable.getRowId(cursor))
                 .setGuid(PointOfInterestTable.getGUID(cursor))
                 .setTitle(PointOfInterestTable.getTitle(cursor))
@@ -115,7 +181,7 @@ public class DataSource {
             do {
                 PointOfInterest newPOI = pointOfInterestFromCursor(itemCursor);
                 pointsOfInterest.add(newPOI);
-                Log.v(TAG, newPOI.getTitle());
+                Log.v(TAG, "" + newPOI.getRowId() + " " + newPOI.getTitle() + " " + newPOI.getCategoryId());
             } while (itemCursor.moveToNext());
         }
         readableDatabase.close();
@@ -167,11 +233,20 @@ public class DataSource {
             do {
                 Category newCategory = categoryFromCursor(itemCursor);
                 categories.add(newCategory);
-                Log.v(TAG, newCategory.getTitle());
+                Log.v(TAG, "" + newCategory.getRowId() + " " + newCategory.getTitle());
             } while (itemCursor.moveToNext());
         }
         readableDatabase.close();
         return categories;
+    }
+
+    public Category getCategoryWithRowId(long rowId) {
+        for (Category category : mCategories) {
+            if (category.getRowId() == rowId) {
+                return category;
+            }
+        }
+        return null;
     }
 
     /*
@@ -242,21 +317,4 @@ public class DataSource {
                 mDatabaseOpenHelper.getReadableDatabase(), rowId);
         return itemCursor;
     }
-
-//    public Cursor getCursorOfInsertedPOIWithGuid(String guid) {
-//        // query the DB for the passed pointOfInterest
-//        Cursor itemCursor = mPointOfInterestTable.fetchWithGuid(
-//                mDatabaseOpenHelper.getReadableDatabase(), guid);
-//        return itemCursor;
-//    }
-//
-//    public PointOfInterest getRoundTripInsertPointOfInterest(PointOfInterest poi) {
-//        insertPointOfInterest(poi, null);
-//        String guid = poi.getGuid();
-//        Cursor itemCursor = mPointOfInterestTable.fetchWithGuid(
-//                mDatabaseOpenHelper.getReadableDatabase(), guid);
-//
-//        PointOfInterest newPOI = pointOfInterestFromCursor(itemCursor);
-//        return newPOI;
-//    }
 }

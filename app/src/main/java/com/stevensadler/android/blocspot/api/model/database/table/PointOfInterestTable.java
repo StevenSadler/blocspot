@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.stevensadler.android.blocspot.api.model.Category;
+
 /**
  * Created by Steven on 2/17/2016.
  */
@@ -15,6 +17,11 @@ public class PointOfInterestTable extends Table {
 
         public Builder setGUID(String guid) {
             values.put(COLUMN_GUID, guid);
+            return this;
+        }
+
+        public Builder setCategoryId(long categoryId) {
+            values.put(COLUMN_CATEGORY_ID, categoryId);
             return this;
         }
 
@@ -39,13 +46,16 @@ public class PointOfInterestTable extends Table {
         }
 
         @Override
-        public long insert(SQLiteDatabase writeableDB) {
-            return writeableDB.insert(NAME, null, values);
+        public long insert(SQLiteDatabase writableDatabase) {
+            return writableDatabase.insert(NAME, null, values);
         }
     }
 
     public static String getGUID(Cursor cursor) {
         return getString(cursor, COLUMN_GUID);
+    }
+    public static long getCategoryId(Cursor cursor) {
+        return getLong(cursor, COLUMN_CATEGORY_ID);
     }
     public static String getTitle(Cursor cursor) {
         return getString(cursor, COLUMN_TITLE);
@@ -63,6 +73,7 @@ public class PointOfInterestTable extends Table {
     private static final String NAME = "points_of_interest";
 
     private static final String COLUMN_GUID = "guid";
+    private static final String COLUMN_CATEGORY_ID = "category_id";
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_LATITUDE = "latitude";
     private static final String COLUMN_LONGITUDE = "longitude";
@@ -81,7 +92,8 @@ public class PointOfInterestTable extends Table {
                 + COLUMN_TITLE + " TEXT,"
                 + COLUMN_LATITUDE + " REAL,"
                 + COLUMN_LONGITUDE + " REAL,"
-                + COLUMN_RADIUS + " REAL)";
+                + COLUMN_RADIUS + " REAL,"
+                + COLUMN_CATEGORY_ID + " INTEGER)";
     }
 
     @Override
@@ -102,10 +114,11 @@ public class PointOfInterestTable extends Table {
                         + COLUMN_GUID + " TEXT,"
                         + COLUMN_TITLE + " TEXT,"
                         + COLUMN_LATITUDE + " REAL,"
-                        + COLUMN_LONGITUDE + " REAL)");
+                        + COLUMN_LONGITUDE + " REAL,"
+                        + COLUMN_RADIUS + " REAL)");
             case 2:
                 writableDatabase.execSQL("ALTER TABLE " + getName()
-                        + "ADD COLUMN " + COLUMN_RADIUS + " REAL");
+                        + "ADD COLUMN " + COLUMN_CATEGORY_ID + " INTEGER");
             default:
                 break;
         }
@@ -115,5 +128,11 @@ public class PointOfInterestTable extends Table {
         return readonlyDatabase.query(true, getName(), null, null,
                 null,
                 null, null, null, null);
+    }
+
+    public int updateCategoryId(SQLiteDatabase writableDatabase, Category category, long rowId) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_ID, category.getRowId());
+        return writableDatabase.update(NAME, values, COLUMN_ID + " = " + rowId, null);
     }
 }

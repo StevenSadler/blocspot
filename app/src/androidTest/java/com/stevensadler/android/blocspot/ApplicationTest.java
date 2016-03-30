@@ -204,6 +204,13 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
     }
 
     /*
+     * change category in PointOfInterest
+     */
+//    public void testChangePOICategoryId() {
+//
+//    }
+
+    /*
      * Category model
      */
     public void testCategoryHasDefaultColor() {
