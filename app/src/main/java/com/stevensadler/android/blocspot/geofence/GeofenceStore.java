@@ -18,6 +18,7 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 
 import java.util.ArrayList;
 
@@ -141,15 +142,17 @@ public class GeofenceStore implements
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v(TAG, "Location Information\n"
-                + "==========\n"
-                + "Provider:\t" + location.getProvider() + "\n"
-                + "Lat & Long:\t" + location.getLatitude() + ", "
-                + location.getLongitude() + "\n"
-                + "Altitude:\t" + location.getAltitude() + "\n"
-                + "Bearing:\t" + location.getBearing() + "\n"
-                + "Speed:\t\t" + location.getSpeed() + "\n"
-                + "Accuracy:\t" + location.getAccuracy() + "\n");
+//        Log.v(TAG, "Location Information\n"
+//                + "==========\n"
+//                + "Provider:\t" + location.getProvider() + "\n"
+//                + "Lat & Long:\t" + location.getLatitude() + ", "
+//                + location.getLongitude() + "\n"
+//                + "Altitude:\t" + location.getAltitude() + "\n"
+//                + "Bearing:\t" + location.getBearing() + "\n"
+//                + "Speed:\t\t" + location.getSpeed() + "\n"
+//                + "Accuracy:\t" + location.getAccuracy() + "\n");
+
+        BlocspotApplication.getSharedDataSource().setLastLocation(location);
     }
 
     @Override

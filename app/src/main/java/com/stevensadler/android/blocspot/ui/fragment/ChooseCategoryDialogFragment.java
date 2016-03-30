@@ -31,9 +31,9 @@ public class ChooseCategoryDialogFragment extends DialogFragment implements
 
     private static String TAG = ChooseCategoryDialogFragment.class.getSimpleName();
 
-    public static String SET_OPTION = "choose_category_set_option";
-    public static int SET_POI_CATEGORY = 1;
-    public static int SET_FILTER = 2;
+//    public static String SET_OPTION = "choose_category_set_option";
+//    public static int SET_POI_CATEGORY = 1;
+//    public static int SET_FILTER = 2;
 
     private int mSetOption;
 

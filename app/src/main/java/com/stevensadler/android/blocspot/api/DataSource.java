@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.location.Location;
 import android.util.Log;
 
 import com.stevensadler.android.blocspot.api.model.Category;
@@ -11,6 +12,11 @@ import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.api.model.database.DatabaseOpenHelper;
 import com.stevensadler.android.blocspot.api.model.database.table.CategoryTable;
 import com.stevensadler.android.blocspot.api.model.database.table.PointOfInterestTable;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +31,25 @@ public class DataSource extends Observable {
 
     // ChooseCategory modes
     final public static int NO_MODE = 1;
-    final public static int ASSIGN_CATEGORY = 2;
-    final public static int FILTER_BY_CATEGORY = 3;
+    final public static int ASSIGN_YELP_CATEGORY = 2;
+    final public static int ASSIGN_CATEGORY = 3;
+    final public static int FILTER_BY_CATEGORY = 4;
 
     private DatabaseOpenHelper mDatabaseOpenHelper;
     private PointOfInterestTable mPointOfInterestTable;
     private CategoryTable mCategoryTable;
 
+    private List<PointOfInterest> mYelpPointsOfInterest;
     private List<PointOfInterest> mPointsOfInterest;
     private List<Category> mCategories;
 
     private PointOfInterest mSelectedPOI;
     private int mChooseCategoryMode = NO_MODE;
     private Category mCategoryFilter = null;
+    private Location mLastLocation = null;
 
     public DataSource(Context context) {
+        mYelpPointsOfInterest = new ArrayList<>();
         mPointOfInterestTable = new PointOfInterestTable();
         mCategoryTable = new CategoryTable();
         mDatabaseOpenHelper = new DatabaseOpenHelper(context,
@@ -98,6 +108,60 @@ public class DataSource extends Observable {
         return mCategories;
     }
 
+    /*
+     * convert the jsonString yelp query result
+     * to a poi list
+     */
+    public void setYelpPointsOfInterest(String jsonString) {
+        List<PointOfInterest> tempList = new ArrayList<>();
+        JSONParser parser = new JSONParser();
+        try {
+            Object obj = parser.parse(jsonString);
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray businesses = (JSONArray) jsonObject.get("businesses");
+
+            for (Object object : businesses) {
+                JSONObject business = (JSONObject) object;
+                String name = (String) business.get("name");
+                JSONObject location = (JSONObject) business.get("location");
+                JSONObject coordinate = (JSONObject) location.get("coordinate");
+                double dLatitude = (double) coordinate.get("latitude");
+                double dLongitude = (double) coordinate.get("longitude");
+
+
+                float latitude = (float) dLatitude;
+                float longitude = (float) dLongitude;
+
+                Log.v(TAG, "business name : " + name + " " + latitude + " " + longitude);
+
+                PointOfInterest poi = new PointOfInterest()
+                        .setTitle(name)
+                        .setLatitude(latitude)
+                        .setLongitude(longitude);
+
+                tempList.add(poi);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        mYelpPointsOfInterest = tempList;
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+    public List<PointOfInterest> getYelpPointsOfInterest() {
+        return mYelpPointsOfInterest;
+    }
+
+    public void setLastLocation(Location location) {
+        mLastLocation = location;
+    }
+    public Location getLastLocation() {
+        return mLastLocation;
+    }
     public void setSelectedPOI(PointOfInterest pointOfInterest) {
         mSelectedPOI = pointOfInterest;
     }
@@ -149,7 +213,6 @@ public class DataSource extends Observable {
         clearChanged();
     }
 
-
     public void devChangePOICategoryId() {
         // change categoryId value in PointOfInterestTable cursor for a POI
         // update the POI model in the list
@@ -163,12 +226,64 @@ public class DataSource extends Observable {
      * Point of Interest functions
      */
 
+    public void saveYelpPointOfInterest() {
+        insertPointOfInterest(mSelectedPOI, null);
+        mPointsOfInterest = readPointOfInterestTableToModel();
+    }
+    public void clearYelpPointsOfInterest() {
+        mYelpPointsOfInterest.clear();
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+    public void saveYelpPointOfInterestWithCategory(Category category) {
+        // insert the selected yelp poi into the db and read into model list with poi row id
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory categoryId.getRowId = " + category.getRowId());
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory mSelectedPOI before any change = " + mSelectedPOI.getCategoryId());
+
+        mSelectedPOI.setCategoryId(category.getRowId());
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory mSelectedPOI after change = " + mSelectedPOI.getCategoryId());
+
+        long poiRowId = insertPointOfInterest(mSelectedPOI, null);
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory poiRowId = " + poiRowId);
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory mSelectedPOI.getRowId = " + mSelectedPOI.getRowId());
+
+        mPointsOfInterest = readPointOfInterestTableToModel();
+        Log.v(TAG, "saveYelpPointOfInterestWithCategory mSelectedPOI after insert categoryId = " + mSelectedPOI.getCategoryId());
+
+
+
+
+//
+//        Cursor cursor = getCursorOfInsertedPOIWithRowId(poiRowId);
+//        PointOfInterest poi = DataSource.pointOfInterestFromCursor(cursor);
+//        Log.v(TAG, "saveYelpPointOfInterestWithCategory cursor poi after insert categoryId = " + poi.getCategoryId());
+
+
+        // remove the yelp pois but do not notify observers yet
+        mYelpPointsOfInterest.clear();
+
+        // add the category to the selected poi and set its category id
+        // do not read poi table or category table, since no changes have been made since last read
+        // lastly, notify observers
+        //setPOICategory(category, mSelectedPOI);
+
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+
     public long insertPointOfInterest(PointOfInterest pointOfInterest, SQLiteDatabase writableDatabase) {
         PointOfInterestTable.Builder builder = new PointOfInterestTable.Builder()
                 .setTitle(pointOfInterest.getTitle())
                 .setGUID(pointOfInterest.getGuid())
                 .setLatitude(pointOfInterest.getLatitude())
-                .setLongitude(pointOfInterest.getLongitude());
+                .setLongitude(pointOfInterest.getLongitude())
+                .setCategoryId(pointOfInterest.getCategoryId());
 
         long rowId;
         if (writableDatabase == null) {
