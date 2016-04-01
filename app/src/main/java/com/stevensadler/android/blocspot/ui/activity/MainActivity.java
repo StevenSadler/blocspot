@@ -45,7 +45,10 @@ public class MainActivity extends AppCompatActivity implements
         IYelpPointOfInterestInput,
         SaveCategoryDialogFragment.SaveCategoryDialogListener {
 
-    private static String TAG = MainActivity.class.getSimpleName();
+    private static String TAG = MainActivity.class.getSimpleName()+" sjs";
+
+//    private ItemListFragment mItemListFragment;
+//    private BlocspotMapFragment mBlocspotMapFragment;
 
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
@@ -62,15 +65,30 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
+//        Log.v(TAG, "onResume ");
         LocalBroadcastManager.getInstance(this).registerReceiver(mYelpQueryReceiver,
                 new IntentFilter(YelpQueryIntentService.BROADCAST_FILTER));
+
+
+
+//        Observer observer = (Observer) mViewPager.getAdapter();
+//        observer.update(null, null);
+
+//        BlocspotApplication.getSharedDataSource().addObserver(mItemListFragment);
+//        BlocspotApplication.getSharedDataSource().addObserver(mBlocspotMapFragment);
+        Log.v(TAG, "onResume    countObservers = " + BlocspotApplication.getSharedDataSource().countObservers());
+
+        ViewPagerAdapter adapter = (ViewPagerAdapter) mViewPager.getAdapter();
+        BlocspotApplication.getSharedDataSource().deleteObservers();
+        BlocspotApplication.getSharedDataSource().addObserver(adapter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.v(TAG, "onPause");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mYelpQueryReceiver);
+        BlocspotApplication.getSharedDataSource().deleteObservers();
     }
 
     @Override
@@ -78,15 +96,27 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.v(TAG, "onCreate");
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(mViewPager);
-
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
+
+//        if (savedInstanceState == null) {
+//            mItemListFragment = new ItemListFragment();
+//            mBlocspotMapFragment = new BlocspotMapFragment();
+//            BlocspotApplication.getSharedDataSource().addObserver(mItemListFragment);
+//            BlocspotApplication.getSharedDataSource().addObserver(mBlocspotMapFragment);
+//            Log.v(TAG, "onCreate    countObservers = " + BlocspotApplication.getSharedDataSource().countObservers());
+//        }
+//        if (savedInstanceState != null) {
+//            BlocspotApplication.getSharedDataSource().deleteObservers();
+//        }
 
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mGeofences = new ArrayList<Geofence>();
@@ -107,19 +137,41 @@ public class MainActivity extends AppCompatActivity implements
 
         mYelpQueryReceiver = new YelpQueryReceiver();
         mServiceIntent = new Intent(this, YelpQueryIntentService.class);
+
+//        if (savedInstanceState == null) {
+//            Log.v(TAG, "onCreate savedInstanceState is null");
+//            mViewPager = (ViewPager) findViewById(R.id.viewpager);
+//            setupViewPager(mViewPager);
+//            mTabLayout = (TabLayout) findViewById(R.id.tabs);
+//            mTabLayout.setupWithViewPager(mViewPager);
+//        } else {
+//            Log.v(TAG, "onCreate savedInstanceState is NOT null");
+//            mViewPager = (ViewPager) findViewById(R.id.viewpager);
+//            setupViewPager(mViewPager);
+//            mTabLayout = (TabLayout) findViewById(R.id.tabs);
+//            mTabLayout.setupWithViewPager(mViewPager);
+//        }
         handleIntent(getIntent());
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        Log.v(TAG, "setupViewPager");
         ItemListFragment itemListFragment = new ItemListFragment();
         BlocspotMapFragment blocspotMapFragment = new BlocspotMapFragment();
-        BlocspotApplication.getSharedDataSource().addObserver(itemListFragment);
-        BlocspotApplication.getSharedDataSource().addObserver(blocspotMapFragment);
+
+//        BlocspotApplication.getSharedDataSource().addObserver(itemListFragment);
+//        BlocspotApplication.getSharedDataSource().addObserver(blocspotMapFragment);
+//        Log.v(TAG, "setupViewPager countObservers=" + BlocspotApplication.getSharedDataSource().countObservers());
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(itemListFragment, "List");
         adapter.addFragment(blocspotMapFragment, "Map");
         viewPager.setAdapter(adapter);
+
+//        BlocspotApplication.getSharedDataSource().deleteObservers();
+//        BlocspotApplication.getSharedDataSource().addObserver(adapter);
+
+        //adapter.saveState();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.stevensadler.android.blocspot.ui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.graphics.ColorUtils;
 import android.util.Log;
 
@@ -18,21 +19,20 @@ import com.stevensadler.android.blocspot.R;
 import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
+import com.stevensadler.android.blocspot.ui.adapter.ViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by Steven on 2/23/2016.
  */
 public class BlocspotMapFragment extends SupportMapFragment implements
-        Observer {
+        ViewPagerAdapter.Listener {
 
-    private static String TAG = BlocspotMapFragment.class.getSimpleName();
+    private static String TAG = BlocspotMapFragment.class.getSimpleName()+" sjs";
 
     private static int DEFAULT_COLOR = 0xff0000;
     private static int DEFAULT_ALPHA = 0x20;
@@ -42,9 +42,12 @@ public class BlocspotMapFragment extends SupportMapFragment implements
     private static List<Marker> mMarkerList;
     private static HashMap<Marker, PointOfInterest> mYelpMarkerHashMap;
 
+    private GoogleMap mGoogleMap;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate");
         mMarkerList = new ArrayList<>();
         mYelpMarkerHashMap = new HashMap<>();
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
@@ -53,15 +56,32 @@ public class BlocspotMapFragment extends SupportMapFragment implements
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v(TAG, "onDestroyView");
+        Fragment fragment =  getFragmentManager()
+                .findFragmentById(R.id.map);
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
+    }
+
     /*
-     * Observer
+     * ViewPagerAdapter.Listener
      */
     @Override
-    public void update(Observable observable, Object data) {
-        Log.v(TAG, "update");
+    public void updateListener() {
+        Log.v(TAG, "updateListener");
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mYelpPointsOfInterest = BlocspotApplication.getSharedDataSource().getYelpPointsOfInterest();
         initMap();
+
+//        if (mGoogleMap != null) {
+//            setupMap();
+//        } else {
+//            Log.v(TAG, "update   why is mGoogleMap null");
+//        }
     }
 
     /*
@@ -71,72 +91,144 @@ public class BlocspotMapFragment extends SupportMapFragment implements
         getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                // clean up the markers and lists from previous runs
-                googleMap.clear();
-                for (Marker marker : mMarkerList) {
-                    marker.remove();
-                }
-                mMarkerList.clear();
-                mYelpMarkerHashMap.clear();
-                for (Map.Entry<Marker, PointOfInterest> entry : mYelpMarkerHashMap.entrySet()) {
-                    // do something
-                }
 
-                // add real markers for saved POI's
-                for (PointOfInterest pointOfInterest : mPointsOfInterest) {
-                    Marker marker = showMarker(googleMap, pointOfInterest, false);
+                mGoogleMap = googleMap;
 
-                    if (mMarkerList.contains(marker)) {
-                        marker.remove();
-                    } else {
-                        mMarkerList.add(marker);
-                    }
-                }
+                setupMap();
 
-                // add yelp markers for unsaved yelp POI's
-                //final HashMap<Marker, PointOfInterest> yelpHashMap = new HashMap<Marker, PointOfInterest>();
-                for (PointOfInterest yelpPointOfInterest : mYelpPointsOfInterest) {
-                    Marker marker = showMarker(googleMap, yelpPointOfInterest, false);
-
-                    // remove the the yelp marker if it is a dupe of a real marker
-                    // otherwise add it to the hashmap
-                    if (mMarkerList.contains(marker)) {
-                        marker.remove();
-                    } else {
-                        mYelpMarkerHashMap.put(marker, yelpPointOfInterest);
-                    }
-                }
-
-                PointOfInterest selectedPOI = null;
-                if (mYelpPointsOfInterest.size() > 0) {
-                    selectedPOI = mYelpPointsOfInterest.get(0);
-                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker clickedMarker) {
-                            for (Map.Entry<Marker, PointOfInterest> entry : mYelpMarkerHashMap.entrySet()) {
-                                if (clickedMarker.equals(entry.getKey())) {
-                                    Log.v(TAG, "onMarkerClick Yelp POI " + entry.getValue().getTitle());
-                                    IYelpPointOfInterestInput activity =
-                                            (IYelpPointOfInterestInput) getActivity();
-                                    activity.onSelectYelpPointOfInterest(entry.getValue());
-
-                                    return true;
-                                }
-                            }
-
-                            return false;
-                        }
-                    });
-                } else if (mPointsOfInterest.size() > 0) {
-                    selectedPOI = mPointsOfInterest.get(0);
-                }
-
-                if (selectedPOI != null) {
-                    LatLng cameraLatLng = new LatLng(selectedPOI.getLatitude(), selectedPOI.getLongitude());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 14));
-                }
+//                // clean up the markers and lists from previous runs
+//                googleMap.clear();
+//                for (Marker marker : mMarkerList) {
+//                    marker.remove();
+//                }
+//                mMarkerList.clear();
+//                mYelpMarkerHashMap.clear();
+//                for (Map.Entry<Marker, PointOfInterest> entry : mYelpMarkerHashMap.entrySet()) {
+//                    // do something
+//                }
+//
+//                // add real markers for saved POI's
+//                for (PointOfInterest pointOfInterest : mPointsOfInterest) {
+//                    Marker marker = showMarker(googleMap, pointOfInterest, false);
+//
+//                    if (mMarkerList.contains(marker)) {
+//                        marker.remove();
+//                    } else {
+//                        mMarkerList.add(marker);
+//                    }
+//                }
+//
+//                // add yelp markers for unsaved yelp POI's
+//                //final HashMap<Marker, PointOfInterest> yelpHashMap = new HashMap<Marker, PointOfInterest>();
+//                for (PointOfInterest yelpPointOfInterest : mYelpPointsOfInterest) {
+//                    Marker marker = showMarker(googleMap, yelpPointOfInterest, false);
+//
+//                    // remove the the yelp marker if it is a dupe of a real marker
+//                    // otherwise add it to the hashmap
+//                    if (mMarkerList.contains(marker)) {
+//                        marker.remove();
+//                    } else {
+//                        mYelpMarkerHashMap.put(marker, yelpPointOfInterest);
+//                    }
+//                }
+//
+//                PointOfInterest selectedPOI = null;
+//                if (mYelpPointsOfInterest.size() > 0) {
+//                    selectedPOI = mYelpPointsOfInterest.get(0);
+//                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                        @Override
+//                        public boolean onMarkerClick(Marker clickedMarker) {
+//                            for (Map.Entry<Marker, PointOfInterest> entry : mYelpMarkerHashMap.entrySet()) {
+//                                if (clickedMarker.equals(entry.getKey())) {
+//                                    Log.v(TAG, "onMarkerClick Yelp POI " + entry.getValue().getTitle());
+//                                    IYelpPointOfInterestInput activity =
+//                                            (IYelpPointOfInterestInput) getActivity();
+//                                    activity.onSelectYelpPointOfInterest(entry.getValue());
+//
+//                                    return true;
+//                                }
+//                            }
+//
+//                            return false;
+//                        }
+//                    });
+//                } else if (mPointsOfInterest.size() > 0) {
+//                    selectedPOI = mPointsOfInterest.get(0);
+//                }
+//
+//                if (selectedPOI != null) {
+//                    LatLng cameraLatLng = new LatLng(selectedPOI.getLatitude(), selectedPOI.getLongitude());
+//                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 14));
+//                }
             }
         });
+    }
+
+    private void setupMap() {
+        // clean up the markers and lists from previous runs
+        mGoogleMap.clear();
+        for (Marker marker : mMarkerList) {
+            marker.remove();
+        }
+        mMarkerList.clear();
+        mYelpMarkerHashMap.clear();
+        for (Map.Entry<Marker, PointOfInterest> entry : mYelpMarkerHashMap.entrySet()) {
+            // do something
+        }
+
+        // add real markers for saved POI's
+        for (PointOfInterest pointOfInterest : mPointsOfInterest) {
+            Marker marker = showMarker(mGoogleMap, pointOfInterest, false);
+
+            if (mMarkerList.contains(marker)) {
+                marker.remove();
+            } else {
+                mMarkerList.add(marker);
+            }
+        }
+
+        // add yelp markers for unsaved yelp POI's
+        //final HashMap<Marker, PointOfInterest> yelpHashMap = new HashMap<Marker, PointOfInterest>();
+        for (PointOfInterest yelpPointOfInterest : mYelpPointsOfInterest) {
+            Marker marker = showMarker(mGoogleMap, yelpPointOfInterest, false);
+
+            // remove the the yelp marker if it is a dupe of a real marker
+            // otherwise add it to the hashmap
+            if (mMarkerList.contains(marker)) {
+                marker.remove();
+            } else {
+                mYelpMarkerHashMap.put(marker, yelpPointOfInterest);
+            }
+        }
+
+        PointOfInterest selectedPOI = null;
+        if (mYelpPointsOfInterest.size() > 0) {
+            selectedPOI = mYelpPointsOfInterest.get(0);
+            mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker clickedMarker) {
+                    for (Map.Entry<Marker, PointOfInterest> entry : mYelpMarkerHashMap.entrySet()) {
+                        if (clickedMarker.equals(entry.getKey())) {
+                            Log.v(TAG, "onMarkerClick Yelp POI " + entry.getValue().getTitle());
+                            IYelpPointOfInterestInput activity =
+                                    (IYelpPointOfInterestInput) getActivity();
+                            activity.onSelectYelpPointOfInterest(entry.getValue());
+
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            });
+        } else if (mPointsOfInterest.size() > 0) {
+            selectedPOI = mPointsOfInterest.get(0);
+        }
+
+        if (selectedPOI != null) {
+            LatLng cameraLatLng = new LatLng(selectedPOI.getLatitude(), selectedPOI.getLongitude());
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng, 14));
+        }
     }
 
     private Marker showMarker(GoogleMap googleMap, PointOfInterest pointOfInterest, Boolean showCircle) {

@@ -27,7 +27,7 @@ import java.util.Observable;
  */
 public class DataSource extends Observable {
 
-    private static String TAG = DataSource.class.getSimpleName();
+    private static String TAG = DataSource.class.getSimpleName()+" sjs";
 
     // ChooseCategory modes
     final public static int NO_MODE = 1;
@@ -113,6 +113,7 @@ public class DataSource extends Observable {
      * to a poi list
      */
     public void setYelpPointsOfInterest(String jsonString) {
+        Log.v(TAG, "setYelpPointsOfInterest");
         List<PointOfInterest> tempList = new ArrayList<>();
         JSONParser parser = new JSONParser();
         try {
@@ -267,11 +268,13 @@ public class DataSource extends Observable {
      */
 
     public void saveYelpPointOfInterest(String note) {
+        Log.v(TAG, "saveYelpPointOfInterest");
         mSelectedPOI.setNote(note);
         insertPointOfInterest(mSelectedPOI, null);
         mPointsOfInterest = readPointOfInterestTableToModel();
     }
     public void clearYelpPointsOfInterest() {
+        Log.v(TAG, "clearYelpPointOfInterest");
         mYelpPointsOfInterest.clear();
 
         // notify observers

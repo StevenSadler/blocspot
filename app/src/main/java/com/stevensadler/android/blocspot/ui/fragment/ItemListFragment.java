@@ -14,19 +14,18 @@ import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 import com.stevensadler.android.blocspot.ui.adapter.ItemListAdapter;
+import com.stevensadler.android.blocspot.ui.adapter.ViewPagerAdapter;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by Steven on 2/24/2016.
  */
 public class ItemListFragment extends Fragment implements
-        Observer,
+        ViewPagerAdapter.Listener,
         ItemListAdapter.Delegate {
 
-    private static String TAG = ItemListFragment.class.getSimpleName();
+    private static String TAG = ItemListFragment.class.getSimpleName()+" sjs";
 
     private static List<PointOfInterest> mPointsOfInterest;
     private static List<Category> mCategories;
@@ -37,6 +36,7 @@ public class ItemListFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate");
 
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mCategories = BlocspotApplication.getSharedDataSource().getCategories();
@@ -90,21 +90,21 @@ public class ItemListFragment extends Fragment implements
     }
 
     /*
-     * Observer
+     * ViewPagerAdapter.Listener
      */
     @Override
-    public void update(Observable observable, Object data) {
-        Log.v(TAG, "update");
+    public void updateListener() {
 
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mCategories = BlocspotApplication.getSharedDataSource().getCategories();
 
         if (isAdded()) {
+            Log.v(TAG, "update  ItemListFragment is added to its activity");
             mItemListAdapter = new ItemListAdapter(getResources(), mPointsOfInterest, mCategories);
             mItemListAdapter.setDelegate(this);
             mRecyclerView.setAdapter(mItemListAdapter);
         } else {
-            Log.d(TAG, "update  ItemListFragment is not added to its activity");
+            Log.d(TAG, "update  ItemListFragment is NOT added to its activity");
         }
     }
 }
