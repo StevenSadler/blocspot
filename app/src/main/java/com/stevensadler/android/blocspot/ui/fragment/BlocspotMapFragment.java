@@ -2,6 +2,7 @@ package com.stevensadler.android.blocspot.ui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.graphics.ColorUtils;
 import android.util.Log;
 
@@ -32,7 +33,7 @@ import java.util.Observer;
 public class BlocspotMapFragment extends SupportMapFragment implements
         Observer {
 
-    private static String TAG = BlocspotMapFragment.class.getSimpleName();
+    private static String TAG = BlocspotMapFragment.class.getSimpleName()+" sjs";
 
     private static int DEFAULT_COLOR = 0xff0000;
     private static int DEFAULT_ALPHA = 0x20;
@@ -42,15 +43,44 @@ public class BlocspotMapFragment extends SupportMapFragment implements
     private static List<Marker> mMarkerList;
     private static HashMap<Marker, PointOfInterest> mYelpMarkerHashMap;
 
+    private String title;
+    private int page;
+
+    public static BlocspotMapFragment newInstance(int page, String title) {
+        BlocspotMapFragment blocspotMapFragment = new BlocspotMapFragment();
+        Bundle args = new Bundle();
+        args.putInt("fragmentID", page);
+        args.putString("fragmentTitle", title);
+        blocspotMapFragment.setArguments(args);
+        return blocspotMapFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate");
+        page = getArguments().getInt("fragmentID");
+        title = getArguments().getString("fragmentTitle");
+
         mMarkerList = new ArrayList<>();
         mYelpMarkerHashMap = new HashMap<>();
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mYelpPointsOfInterest = BlocspotApplication.getSharedDataSource().getYelpPointsOfInterest();
         initMap();
 
+        BlocspotApplication.getSharedDataSource().deleteObservers();
+        BlocspotApplication.getSharedDataSource().addObserver(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v(TAG, "onDestroyView");
+        Fragment fragment =  getFragmentManager()
+                .findFragmentById(R.id.map);
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 
     /*

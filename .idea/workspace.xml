@@ -18,36 +18,19 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="sjs" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9937010-4145-49db-95f7-9c716042ce98" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/EditDetailDialogFragment.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/edit_poi_detail_fragment.xml" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\appcompat_v7_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\design_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\play_services_base_8_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\play_services_basement_8_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\play_services_location_8_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\play_services_maps_8_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\recyclerview_v7_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\support_annotations_23_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\.idea\libraries\support_v4_23_1_1.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/stevensadler/android/blocspot/ApplicationTest.java" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/stevensadler/android/blocspot/ApplicationTest.java" />
+      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\app\src\main\java\com\stevensadler\android\blocspot\ui\activity\YelpSearchableActivity.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Steven\bloc\android-source\blocspot\app\src\main\java\com\stevensadler\android\blocspot\ui\adapter\CategoryListAdapter.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/BlocspotMapFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/BlocspotMapFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/Category.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/Category.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/DataSource.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/DataSource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/geofence/GeofenceStore.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/geofence/GeofenceStore.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/IPointOfInterestInput.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/IPointOfInterestInput.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ItemListAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ItemListAdapter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/ItemListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/ItemListFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/PointOfInterest.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/PointOfInterest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/database/table/PointOfInterestTable.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/database/table/PointOfInterestTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/database/table/Table.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/database/table/Table.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ViewPagerAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ViewPagerAdapter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/YelpDetailDialogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/YelpDetailDialogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/poi_item.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/poi_item.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Blocspot.iws" />
@@ -78,24 +61,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="DataSource.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/DataSource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="256" column="62" selection-start-line="256" selection-start-column="62" selection-end-line="256" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ItemListFragment.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ItemListFragment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/ItemListFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="89" column="5" selection-start-line="89" selection-start-column="5" selection-end-line="89" selection-end-column="5" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="-0.55689657">
+              <caret line="28" column="76" selection-start-line="28" selection-start-column="76" selection-end-line="28" selection-end-column="76" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -104,43 +75,32 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ViewPagerAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="38" column="5" selection-start-line="38" selection-start-column="5" selection-end-line="38" selection-end-column="5" />
+              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlocspotMapFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/BlocspotMapFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="70" column="8" selection-start-line="70" selection-start-column="8" selection-end-line="71" selection-end-column="68" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#726#727#0" expanded="true" />
-                <element signature="e#769#770#0" expanded="true" />
-                <element signature="e#983#984#0" expanded="true" />
-                <element signature="e#1038#1039#0" expanded="true" />
+                <element signature="e#3574#6830#0" expanded="true" />
+                <element signature="e#5504#6401#0" expanded="true" />
+                <element signature="e#6400#6401#0" expanded="true" />
+                <element signature="e#6829#6830#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IPointOfInterestInput.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/IPointOfInterestInput.java">
+      <file leaf-file-name="YelpDetailDialogFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/YelpDetailDialogFragment.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="74" selection-start-line="9" selection-start-column="74" selection-end-line="9" selection-end-column="74" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ItemListAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ItemListAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="27" column="67" selection-start-line="27" selection-start-column="67" selection-end-line="27" selection-end-column="67" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GeofenceStore.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/geofence/GeofenceStore.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="140" column="0" selection-start-line="140" selection-start-column="0" selection-end-line="140" selection-end-column="0" />
+              <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -150,43 +110,10 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="290" column="43" selection-start-line="290" selection-start-column="43" selection-end-line="290" selection-end-column="43" />
+              <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlocspotMapFragment.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/BlocspotMapFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.436853">
-              <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
-              <folding>
-                <element signature="e#2488#5744#0" expanded="true" />
-                <element signature="e#5743#5744#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EditDetailDialogFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/EditDetailDialogFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="60" selection-start-line="7" selection-start-column="60" selection-end-line="7" selection-end-column="60" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="YelpDetailDialogFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/YelpDetailDialogFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="55" column="9" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -1833,7 +1760,6 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/jsontest" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/BlocspotApplication.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/yelp/YelpAPI.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/YelpSearchableActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/yelp/YelpQueryIntentService.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/yelp/YelpQueryReceiver.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/IYelpPointOfInterestInput.java" />
@@ -1841,11 +1767,9 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/yelp_poi_detail_fragment.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/PointOfInterest.java" />
         <option value="$PROJECT_DIR$/app/src/androidTest/java/com/stevensadler/android/blocspot/ApplicationTest.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/Category.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/YelpDetailDialogFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/EditDetailDialogFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/edit_poi_detail_fragment.xml" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
@@ -1854,12 +1778,15 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/database/table/PointOfInterestTable.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/geofence/GeofenceStore.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/IPointOfInterestInput.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ItemListAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/BlocspotMapFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/YelpDetailDialogFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/YelpSearchableActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/DataSource.java" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ViewPagerAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/ItemListFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ItemListAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/DataSource.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/BlocspotMapFragment.java" />
       </list>
     </option>
   </component>
@@ -1874,9 +1801,10 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="3" />
-    <option name="width" value="1102" />
-    <option name="height" value="1044" />
+    <option name="x" value="7" />
+    <option name="y" value="4" />
+    <option name="width" value="1111" />
+    <option name="height" value="1022" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -1901,7 +1829,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -2704,7 +2632,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2725,6 +2652,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -2947,7 +2875,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="3" y="0" width="1102" height="1044" extended-state="1" />
+    <frame x="7" y="4" width="1111" height="1022" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.107538804" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2958,15 +2886,16 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35920176" sideWeight="0.5063898" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.43569845" sideWeight="0.49361023" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31136364" sideWeight="0.49361023" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6751663" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.675" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5829384" sideWeight="0.5050785" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.38593155" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2931197" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35113636" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -2979,7 +2908,6 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35144123" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -3027,14 +2955,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/MainActivity.java</url>
-          <line>347</line>
-          <properties />
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="32" />
     </breakpoint-manager>
     <watches-manager />
@@ -3118,77 +3038,70 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_main.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider selected="true" editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="47" column="11" selection-start-line="47" selection-start-column="11" selection-end-line="47" selection-end-column="11" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/category_item.xml">
       <provider selected="true" editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/category_item.xml">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/map_fragment.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/choose_category_fragment.xml">
-      <provider editor-type-id="android-designer">
+      <provider selected="true" editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/choose_category_fragment.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.703704">
           <caret line="17" column="46" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/save_category_fragment.xml">
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/save_category_fragment.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="28" column="4" selection-start-line="28" selection-start-column="4" selection-end-line="32" selection-end-column="46" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/SaveCategoryDialogFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="28" column="31" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/CategoryListAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -3221,13 +3134,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/YelpSearchableActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="75" column="5" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/yelp/YelpQueryIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -3241,13 +3147,6 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/yelp/YelpQueryReceiver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -3287,7 +3186,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="44" selection-start-line="7" selection-start-column="44" selection-end-line="7" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3299,9 +3197,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/yelp_poi_detail_fragment.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-15.666667">
           <caret line="61" column="15" selection-start-line="61" selection-start-column="15" selection-end-line="61" selection-end-column="15" />
@@ -3310,11 +3205,11 @@
           </folding>
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/edit_poi_detail_fragment.xml">
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/edit_poi_detail_fragment.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-37.148148">
           <caret line="59" column="3" selection-start-line="59" selection-start-column="3" selection-end-line="59" selection-end-column="3" />
@@ -3322,6 +3217,9 @@
             <element signature="e#1217#1240#0" expanded="true" />
           </folding>
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
@@ -3331,45 +3229,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17465754">
-          <caret line="29" column="53" selection-start-line="29" selection-start-column="53" selection-end-line="29" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/poi_item_list_fragment.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/poi_item.xml">
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/poi_item.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="26" column="44" selection-start-line="26" selection-start-column="44" selection-end-line="26" selection-end-column="44" />
           <folding />
         </state>
       </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/model/database/table/Table.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="24" column="5" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#855#856#0" expanded="false" />
-            <element signature="e#904#905#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3377,25 +3262,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="160" column="5" selection-start-line="160" selection-start-column="5" selection-end-line="160" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1756#1757#0" expanded="false" />
-            <element signature="e#1809#1810#0" expanded="false" />
-            <element signature="e#1863#1864#0" expanded="false" />
-            <element signature="e#1921#1922#0" expanded="false" />
-            <element signature="e#1972#1973#0" expanded="false" />
-            <element signature="e#2026#2027#0" expanded="false" />
-            <element signature="e#2076#2077#0" expanded="false" />
-            <element signature="e#2129#2130#0" expanded="false" />
-            <element signature="e#2281#2282#0" expanded="false" />
-            <element signature="e#2337#2338#0" expanded="false" />
-            <element signature="e#2391#2392#0" expanded="false" />
-            <element signature="e#2448#2449#0" expanded="false" />
-            <element signature="e#2499#2500#0" expanded="false" />
-            <element signature="e#2553#2554#0" expanded="false" />
-            <element signature="e#3146#3147#0" expanded="false" />
-            <element signature="e#3194#3195#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3415,10 +3281,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/YelpDetailDialogFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/IPointOfInterestInput.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="55" column="9" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
+          <caret line="9" column="74" selection-start-line="9" selection-start-column="74" selection-end-line="9" selection-end-column="74" />
           <folding />
         </state>
       </provider>
@@ -3431,42 +3297,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/IPointOfInterestInput.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/yelp/YelpQueryReceiver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="74" selection-start-line="9" selection-start-column="74" selection-end-line="9" selection-end-column="74" />
+        <state vertical-scroll-proportion="0.05862069">
+          <caret line="7" column="64" selection-start-line="7" selection-start-column="64" selection-end-line="7" selection-end-column="64" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ViewPagerAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="38" column="5" selection-start-line="38" selection-start-column="5" selection-end-line="38" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#726#727#0" expanded="true" />
-            <element signature="e#769#770#0" expanded="true" />
-            <element signature="e#983#984#0" expanded="true" />
-            <element signature="e#1038#1039#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/ItemListFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="89" column="5" selection-start-line="89" selection-start-column="5" selection-end-line="89" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/api/DataSource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="256" column="62" selection-start-line="256" selection-start-column="62" selection-end-line="256" selection-end-column="62" />
+        <state vertical-scroll-proportion="-12.541379">
+          <caret line="29" column="64" selection-start-line="29" selection-start-column="64" selection-end-line="29" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.73275864">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -3474,21 +3324,47 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/activity/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="290" column="43" selection-start-line="290" selection-start-column="43" selection-end-line="290" selection-end-column="43" />
+          <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/adapter/ViewPagerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/BlocspotMapFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.436853">
-          <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="70" column="8" selection-start-line="70" selection-start-column="8" selection-end-line="71" selection-end-column="68" />
           <folding>
-            <element signature="e#2488#5744#0" expanded="true" />
-            <element signature="e#5743#5744#0" expanded="true" />
+            <element signature="e#3574#6830#0" expanded="true" />
+            <element signature="e#5504#6401#0" expanded="true" />
+            <element signature="e#6400#6401#0" expanded="true" />
+            <element signature="e#6829#6830#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/YelpDetailDialogFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/stevensadler/android/blocspot/ui/fragment/ItemListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.55689657">
+          <caret line="28" column="76" selection-start-line="28" selection-start-column="76" selection-end-line="28" selection-end-column="76" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -26,7 +26,7 @@ public class ItemListFragment extends Fragment implements
         Observer,
         ItemListAdapter.Delegate {
 
-    private static String TAG = ItemListFragment.class.getSimpleName();
+    private static String TAG = ItemListFragment.class.getSimpleName()+" sjs";
 
     private static List<PointOfInterest> mPointsOfInterest;
     private static List<Category> mCategories;
@@ -34,15 +34,32 @@ public class ItemListFragment extends Fragment implements
     private RecyclerView mRecyclerView;
     private ItemListAdapter mItemListAdapter;
 
+    private String title;
+    private int page;
+
+    public static ItemListFragment newInstance(int page, String title) {
+        ItemListFragment itemListFragment = new ItemListFragment();
+        Bundle args = new Bundle();
+        args.putInt("fragmentID", page);
+        args.putString("fragmentTitle", title);
+        itemListFragment.setArguments(args);
+        return itemListFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        page = getArguments().getInt("fragmentID");
+        title = getArguments().getString("fragmentTitle");
 
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mCategories = BlocspotApplication.getSharedDataSource().getCategories();
 
         mItemListAdapter = new ItemListAdapter(getResources(), mPointsOfInterest, mCategories);
         mItemListAdapter.setDelegate(this);
+
+        BlocspotApplication.getSharedDataSource().deleteObservers();
+        BlocspotApplication.getSharedDataSource().addObserver(this);
     }
 
     @Override

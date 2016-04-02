@@ -26,7 +26,7 @@ public class YelpDetailDialogFragment extends DialogFragment implements
         public void onChooseYelpDetailDialog();
     }
 
-    private static String TAG = YelpDetailDialogFragment.class.getSimpleName();
+    private static String TAG = YelpDetailDialogFragment.class.getSimpleName()+" sjs";
 
     private View mCategorySwatch;
     private TextView mTitleTextView;

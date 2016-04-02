@@ -31,7 +31,6 @@ import com.stevensadler.android.blocspot.ui.fragment.BlocspotMapFragment;
 import com.stevensadler.android.blocspot.ui.fragment.ChooseCategoryDialogFragment;
 import com.stevensadler.android.blocspot.ui.fragment.IPointOfInterestInput;
 import com.stevensadler.android.blocspot.ui.fragment.IYelpPointOfInterestInput;
-import com.stevensadler.android.blocspot.ui.fragment.ItemListFragment;
 import com.stevensadler.android.blocspot.ui.fragment.SaveCategoryDialogFragment;
 import com.stevensadler.android.blocspot.ui.fragment.YelpDetailDialogFragment;
 
@@ -50,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
+    private ViewPagerAdapter mViewPagerAdapter;
 
     private ArrayList<Geofence> mGeofences;
     private GeofenceStore mGeofenceStore;
@@ -70,12 +70,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        Log.v(TAG, "onPause");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mYelpQueryReceiver);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -83,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(mViewPager);
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -107,23 +110,11 @@ public class MainActivity extends AppCompatActivity implements
 
         mYelpQueryReceiver = new YelpQueryReceiver();
         mServiceIntent = new Intent(this, YelpQueryIntentService.class);
-        handleIntent(getIntent());
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        ItemListFragment itemListFragment = new ItemListFragment();
-        BlocspotMapFragment blocspotMapFragment = new BlocspotMapFragment();
-        BlocspotApplication.getSharedDataSource().addObserver(itemListFragment);
-        BlocspotApplication.getSharedDataSource().addObserver(blocspotMapFragment);
-
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(itemListFragment, "List");
-        adapter.addFragment(blocspotMapFragment, "Map");
-        viewPager.setAdapter(adapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.v(TAG, "onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
@@ -136,37 +127,11 @@ public class MainActivity extends AppCompatActivity implements
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(true);
 
-//        ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
-//        closeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                EditText editText = (EditText) findViewById(R.id.search_src_text);
-//                editText.setText("");
-//
-//                searchView.setQuery("", false);
-//                searchView.onActionViewCollapsed();
-//                searchMenu.collapseActionView();
-//            }
-//        });
-//
-//        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem item) {
-//                Log.d(TAG, "Search widget expanded ");
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem item) {
-//                Log.d(TAG, "Search widget collapsed ");
-//                return true;
-//            }
-//        });
-
         return super.onCreateOptionsMenu(menu);
     }
 
     public void onNewIntent(Intent intent) {
+        Log.v(TAG, "onNewIntent");
         setIntent(intent);
         handleIntent(intent);
     }
@@ -187,18 +152,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Log.v(TAG, "handleIntent true block");
             String query = intent.getStringExtra(SearchManager.QUERY);
             Location location = BlocspotApplication.getSharedDataSource().getLastLocation();
             doSearch(query, location.getLatitude(), location.getLongitude());
-            //doSearch(query, "San Francisco, CA");
-            //doSearch("dinner", "San Francisco, CA");
 
-            //Log.v(TAG, "handleIntent should add the query parameters to something here " + intent.getDataString());
-            //mServiceIntent.setData(Uri.parse(intent.getDataString()));
-            //startService(mServiceIntent);
-
+        } else {
+            Log.v(TAG, "handleIntent false block");
         }
     }
 
@@ -206,20 +168,11 @@ public class MainActivity extends AppCompatActivity implements
         // get a Cursor, prepare the ListAdapter
         // and set it
         Log.v(TAG, "doSearch " + termString + " " + latitude + "," + longitude);
-        //startService
-        //startService(mServiceIntent);
 
         mServiceIntent.putExtra("term", termString);
         mServiceIntent.putExtra("latitude", latitude);
         mServiceIntent.putExtra("longitude", longitude);
         startService(mServiceIntent);
-
-        //String resultString = mYelpAPI.searchForBusinessesByLocation(queryString, locationString);
-
-
-//        Intent mainActivityIntent = new Intent(this, MainActivity.class);
-//        mainActivityIntent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(mainActivityIntent);
     }
 
     public void onMenuSearchClick(MenuItem menuItem) {
