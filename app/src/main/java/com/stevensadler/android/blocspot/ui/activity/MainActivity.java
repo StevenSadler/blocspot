@@ -1,10 +1,17 @@
 package com.stevensadler.android.blocspot.ui.activity;
 
 import android.app.FragmentManager;
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +22,8 @@ import com.stevensadler.android.blocspot.R;
 import com.stevensadler.android.blocspot.api.DataSource;
 import com.stevensadler.android.blocspot.api.model.Category;
 import com.stevensadler.android.blocspot.api.model.PointOfInterest;
+import com.stevensadler.android.blocspot.api.yelp.YelpQueryIntentService;
+import com.stevensadler.android.blocspot.api.yelp.YelpQueryReceiver;
 import com.stevensadler.android.blocspot.geofence.GeofenceStore;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 import com.stevensadler.android.blocspot.ui.adapter.ViewPagerAdapter;
@@ -22,7 +31,6 @@ import com.stevensadler.android.blocspot.ui.fragment.BlocspotMapFragment;
 import com.stevensadler.android.blocspot.ui.fragment.ChooseCategoryDialogFragment;
 import com.stevensadler.android.blocspot.ui.fragment.IPointOfInterestInput;
 import com.stevensadler.android.blocspot.ui.fragment.IYelpPointOfInterestInput;
-import com.stevensadler.android.blocspot.ui.fragment.ItemListFragment;
 import com.stevensadler.android.blocspot.ui.fragment.SaveCategoryDialogFragment;
 import com.stevensadler.android.blocspot.ui.fragment.YelpDetailDialogFragment;
 
@@ -41,15 +49,35 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
+    private ViewPagerAdapter mViewPagerAdapter;
 
     private ArrayList<Geofence> mGeofences;
     private GeofenceStore mGeofenceStore;
     private List<PointOfInterest> mPointsOfInterest;
 
+    private Intent mServiceIntent;
+    private YelpQueryReceiver mYelpQueryReceiver;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume");
+        LocalBroadcastManager.getInstance(this).registerReceiver(mYelpQueryReceiver,
+                new IntentFilter(YelpQueryIntentService.BROADCAST_FILTER));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v(TAG, "onPause");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mYelpQueryReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -57,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(mViewPager);
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -66,42 +95,45 @@ public class MainActivity extends AppCompatActivity implements
         mGeofences = new ArrayList<Geofence>();
         for (int i = 0; i < mPointsOfInterest.size(); i++) {
             PointOfInterest poi = mPointsOfInterest.get(i);
-            mGeofences.add(new Geofence.Builder()
-                            .setRequestId(""+poi.getRowId())
-                            .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
-                            .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                                    Geofence.GEOFENCE_TRANSITION_EXIT)
-                            .build());
+            if (!poi.getVisited()) {
+                mGeofences.add(new Geofence.Builder()
+                        .setRequestId("" + poi.getRowId())
+                        .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
+                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                Geofence.GEOFENCE_TRANSITION_EXIT)
+                        .build());
+            }
+
         }
         mGeofenceStore = new GeofenceStore(this, mGeofences);
-    }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ItemListFragment itemListFragment = new ItemListFragment();
-        BlocspotMapFragment blocspotMapFragment = new BlocspotMapFragment();
-        BlocspotApplication.getSharedDataSource().addObserver(itemListFragment);
-        BlocspotApplication.getSharedDataSource().addObserver(blocspotMapFragment);
-
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(itemListFragment, "List");
-        adapter.addFragment(blocspotMapFragment, "Map");
-        viewPager.setAdapter(adapter);
+        mYelpQueryReceiver = new YelpQueryReceiver();
+        mServiceIntent = new Intent(this, YelpQueryIntentService.class);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.v(TAG, "onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-//        // Get the SearchView and set the searchable configuration
-//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-//
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        searchView.setIconifiedByDefault(false);
+        final MenuItem searchMenu = menu.findItem(R.id.action_search);
 
-        return true;
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) searchMenu.getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void onNewIntent(Intent intent) {
+        Log.v(TAG, "onNewIntent");
+        setIntent(intent);
+        handleIntent(intent);
     }
 
     @Override
@@ -119,9 +151,33 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Log.v(TAG, "handleIntent true block");
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Location location = BlocspotApplication.getSharedDataSource().getLastLocation();
+            doSearch(query, location.getLatitude(), location.getLongitude());
+
+        } else {
+            Log.v(TAG, "handleIntent false block");
+        }
+    }
+
+    private void doSearch(String termString, double latitude, double longitude) {
+        // get a Cursor, prepare the ListAdapter
+        // and set it
+        Log.v(TAG, "doSearch " + termString + " " + latitude + "," + longitude);
+
+        mServiceIntent.putExtra("term", termString);
+        mServiceIntent.putExtra("latitude", latitude);
+        mServiceIntent.putExtra("longitude", longitude);
+        startService(mServiceIntent);
+    }
+
     public void onMenuSearchClick(MenuItem menuItem) {
         Log.d(TAG, "onMenuSearchClick");
-        onSearchRequested();
+        //onSearchRequested();
     }
 
     public void onMenuAddCategoryClick(MenuItem menuItem) {
@@ -157,6 +213,38 @@ public class MainActivity extends AppCompatActivity implements
 
         ChooseCategoryDialogFragment dialogFragment = new ChooseCategoryDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "choose category");
+    }
+    @Override
+    public void onVisitedPointOfInterest(PointOfInterest poi) {
+        BlocspotApplication.getSharedDataSource().toggleVisited(poi);
+
+        // this section needs lots of testing
+        if (poi.getVisited()) {
+            // remove the Geofence
+            mGeofenceStore.removeSingleGeofence(""+poi.getRowId());
+        } else {
+            // add a Geofence
+            Geofence geofence = new Geofence.Builder()
+                    .setRequestId("" + poi.getRowId())
+                    .setCircularRegion(poi.getLatitude(), poi.getLongitude(), poi.getRadius())
+                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build();
+
+            mGeofenceStore.addSingleGeofence(geofence, ""+poi.getRowId());
+        }
+    }
+    @Override
+    public void onDeletePointOfInterest(PointOfInterest pointOfInterest) {
+        BlocspotApplication.getSharedDataSource().deletePointOfInterest(pointOfInterest);
+    }
+    @Override
+    public void onMapFindPointOfInterest(PointOfInterest pointOfInterest) {
+        mViewPager.setCurrentItem(1, true);
+        ViewPagerAdapter adapter = (ViewPagerAdapter) mViewPager.getAdapter();
+        BlocspotMapFragment mapFragment = (BlocspotMapFragment) adapter.getItem(1);
+        mapFragment.moveCameraToPointOfInterest(pointOfInterest);
     }
 
     /*

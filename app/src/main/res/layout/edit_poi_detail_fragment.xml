@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_edit_poi_detail_fragment"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ll_edit_poi_item"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <View
+            android:id="@+id/v_edit_poi_item_category_swatch"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+        <TextView
+            android:id="@+id/tv_edit_poi_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show a POI Item"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_poi_item_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/note_yelp_poi"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
+    <!--
+    <Button
+        android:id="@+id/b_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/category_edit_poi_button" />
+
+    <Button
+        android:id="@+id/b_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save_edit_poi_button" />
+
+    <Button
+        android:id="@+id/b_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/exit_edit_poi_button" />
+
+-->
+
+
+</LinearLayout>

@@ -222,6 +222,46 @@ public class DataSource extends Observable {
         setPOICategory(category, pointOfInterest);
     }
 
+    public void toggleVisited(PointOfInterest pointOfInterest) {
+        Boolean currentVisited = pointOfInterest.getVisited();
+        long poiRowId = pointOfInterest.getRowId();
+
+        // update the table
+        SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
+        int rowCount = mPointOfInterestTable.updateVisited(writableDatabase, !currentVisited, poiRowId);
+
+        // verify the cursor has changed
+        Cursor cursor = getCursorOfInsertedPOIWithRowId(poiRowId);
+        cursor.moveToFirst();
+        Boolean visited = PointOfInterestTable.getVisited(cursor);
+        Log.v(TAG, "toggleVisited   before = " + currentVisited + "    after = " + visited);
+
+        // update the model list
+        pointOfInterest.setVisited(visited);
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+
+    public void deletePointOfInterest(PointOfInterest pointOfInterest) {
+        Log.v(TAG, "deletePointOfInterest");
+        long poiRowId = pointOfInterest.getRowId();
+
+        // update the table
+        SQLiteDatabase writableDatabase = mDatabaseOpenHelper.getWritableDatabase();
+        int rowCount = mPointOfInterestTable.deleteRow(writableDatabase, poiRowId);
+
+        // update the list
+        mPointsOfInterest = readPointOfInterestTableToModel();
+
+        // notify observers
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+
     /*
      * Point of Interest functions
      */
@@ -283,6 +323,7 @@ public class DataSource extends Observable {
                 .setTitle(pointOfInterest.getTitle())
                 .setGUID(pointOfInterest.getGuid())
                 .setNote(pointOfInterest.getNote())
+                .setVisited(pointOfInterest.getVisited())
                 .setLatitude(pointOfInterest.getLatitude())
                 .setLongitude(pointOfInterest.getLongitude())
                 .setCategoryId(pointOfInterest.getCategoryId());
@@ -307,6 +348,7 @@ public class DataSource extends Observable {
                 .setGuid(PointOfInterestTable.getGUID(cursor))
                 .setTitle(PointOfInterestTable.getTitle(cursor))
                 .setNote(PointOfInterestTable.getNote(cursor))
+                .setVisited(PointOfInterestTable.getVisited(cursor))
                 .setLatitude(PointOfInterestTable.getLatitude(cursor))
                 .setLongitude(PointOfInterestTable.getLongitude(cursor));
     }

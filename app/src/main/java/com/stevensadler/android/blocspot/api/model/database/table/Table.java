@@ -61,6 +61,6 @@ public abstract class Table {
     }
 
     protected static boolean getBoolean(Cursor cursor, String column) {
-        return getLong(cursor, column) == 1l;
+        return getInt(cursor, column) == 1;
     }
 }

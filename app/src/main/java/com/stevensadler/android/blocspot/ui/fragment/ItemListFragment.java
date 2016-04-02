@@ -34,15 +34,42 @@ public class ItemListFragment extends Fragment implements
     private RecyclerView mRecyclerView;
     private ItemListAdapter mItemListAdapter;
 
+    private String title;
+    private int page;
+
+    public static ItemListFragment newInstance(int page, String title) {
+        ItemListFragment itemListFragment = new ItemListFragment();
+        Bundle args = new Bundle();
+        args.putInt("fragmentID", page);
+        args.putString("fragmentTitle", title);
+        itemListFragment.setArguments(args);
+        return itemListFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        page = getArguments().getInt("fragmentID");
+        title = getArguments().getString("fragmentTitle");
 
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mCategories = BlocspotApplication.getSharedDataSource().getCategories();
 
-        mItemListAdapter = new ItemListAdapter(mPointsOfInterest, mCategories);
+        mItemListAdapter = new ItemListAdapter(getResources(), mPointsOfInterest, mCategories);
         mItemListAdapter.setDelegate(this);
+
+        BlocspotApplication.getSharedDataSource().addObserver(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v(TAG, "onDestroyView");
+        Fragment fragment =  getFragmentManager()
+                .findFragmentById(R.id.rv_poi_item_list_fragment);
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 
     @Override
@@ -61,8 +88,25 @@ public class ItemListFragment extends Fragment implements
      * ItemListAdapter.Delegate
      */
     @Override
+    public void onVisitedClicked(PointOfInterest pointOfInterest) {
+        Log.v(TAG, "onVisitedClicked");
+        IPointOfInterestInput activity = (IPointOfInterestInput) getActivity();
+        activity.onVisitedPointOfInterest(pointOfInterest);
+        activity.onMapFindPointOfInterest(pointOfInterest);
+    }
+
+    @Override
+    public void onDeleteClicked(PointOfInterest pointOfInterest) {
+        Log.v(TAG, "onDeleteClicked");
+        IPointOfInterestInput activity = (IPointOfInterestInput) getActivity();
+        activity.onDeletePointOfInterest(pointOfInterest);
+    }
+
+    @Override
     public void onItemClicked(PointOfInterest pointOfInterest) {
-        Log.v(TAG, "onItemClicked");
+        Log.v(TAG, "onItemClicked ");
+        IPointOfInterestInput activity = (IPointOfInterestInput) getActivity();
+        activity.onMapFindPointOfInterest(pointOfInterest);
     }
 
     @Override
@@ -82,8 +126,12 @@ public class ItemListFragment extends Fragment implements
         mPointsOfInterest = BlocspotApplication.getSharedDataSource().getPointsOfInterest();
         mCategories = BlocspotApplication.getSharedDataSource().getCategories();
 
-        mItemListAdapter = new ItemListAdapter(mPointsOfInterest, mCategories);
-        mItemListAdapter.setDelegate(this);
-        mRecyclerView.setAdapter(mItemListAdapter);
+        if (isAdded()) {
+            mItemListAdapter = new ItemListAdapter(getResources(), mPointsOfInterest, mCategories);
+            mItemListAdapter.setDelegate(this);
+            mRecyclerView.setAdapter(mItemListAdapter);
+        } else {
+            Log.d(TAG, "update  ItemListFragment is not added to its activity");
+        }
     }
 }

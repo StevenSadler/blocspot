@@ -21,6 +21,7 @@ import com.google.android.gms.location.LocationServices;
 import com.stevensadler.android.blocspot.ui.BlocspotApplication;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Steven on 2/28/2016.
@@ -36,15 +37,13 @@ public class GeofenceStore implements
     private GoogleApiClient mGoogleApiClient;
     private PendingIntent mPendingIntent;
     private ArrayList<Geofence> mGeofences;
-    private GeofencingRequest mGeofencingRequest;
+    //private GeofencingRequest mGeofencingRequest;
     private LocationRequest mLocationRequest;
-//    private ArrayList<String> mStaleGeofenceIds;
 
 //    public GeofenceStore(Context context, ArrayList<Geofence> geofences, ArrayList<String> staleGeofenceIds) {
     public GeofenceStore(Context context, ArrayList<Geofence> geofences) {
         mContext = context;
         mGeofences = new ArrayList<Geofence>(geofences);
-//        mStaleGeofenceIds = new ArrayList<String>(staleGeofenceIds);
         mPendingIntent = null;
 
         // Build a new GoogleApiClient, specify that we want to use LocationServices
@@ -73,7 +72,7 @@ public class GeofenceStore implements
         Log.d(TAG, "onConnected");
         // We're connected, now we need to create a GeofencingRequest with
         // the geofences we have stored.
-        mGeofencingRequest = new GeofencingRequest.Builder().addGeofences(mGeofences).build();
+        final GeofencingRequest geofencingRequest = new GeofencingRequest.Builder().addGeofences(mGeofences).build();
 
         if (mPendingIntent == null) {
             Log.v(TAG, "Creating PendingIntent");
@@ -104,7 +103,7 @@ public class GeofenceStore implements
                 // Submitting the request to monitor geofences.
                 try {
                     PendingResult<Status> pendingResult = LocationServices.GeofencingApi
-                            .addGeofences(mGoogleApiClient, mGeofencingRequest,
+                            .addGeofences(mGoogleApiClient, geofencingRequest,
                                     mPendingIntent);
                     // Set the result callbacks listener to this class.
                     pendingResult.setResultCallback(new ResultCallback<Status>() {
@@ -119,6 +118,38 @@ public class GeofenceStore implements
                 }
             }
         });
+    }
+
+    public void removeSingleGeofence(String requestId) {
+        List<String> requestIds = new ArrayList<>();
+        requestIds.add(requestId);
+        LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, requestIds);
+    }
+
+    public void addSingleGeofence(Geofence geofence, String requestId) {
+        List<String> requestIds = new ArrayList<>();
+        requestIds.add(requestId);
+        List<Geofence> geofences = new ArrayList<>();
+        geofences.add(geofence);
+
+        final GeofencingRequest geofencingRequest = new GeofencingRequest.Builder().addGeofences(geofences).build();
+
+        // Submitting the request to monitor geofences.
+        try {
+            PendingResult<Status> pendingResult = LocationServices.GeofencingApi
+                    .addGeofences(mGoogleApiClient, geofencingRequest, mPendingIntent);
+
+            // Set the result callbacks listener to this class.
+            pendingResult.setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(Status result) {
+                    Log.v(TAG, "Add Geofences result");
+                    logStatus(result);
+                }
+            });
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
     private void logStatus(Status result) {

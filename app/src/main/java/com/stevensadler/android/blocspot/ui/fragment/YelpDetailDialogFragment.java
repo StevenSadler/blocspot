@@ -26,8 +26,9 @@ public class YelpDetailDialogFragment extends DialogFragment implements
         public void onChooseYelpDetailDialog();
     }
 
-    private static String TAG = YelpDetailDialogFragment.class.getSimpleName();
+    private static String TAG = YelpDetailDialogFragment.class.getSimpleName()+" sjs";
 
+    private View mCategorySwatch;
     private TextView mTitleTextView;
     private EditText mNoteEditText;
     private Button mSaveButton;
@@ -46,6 +47,7 @@ public class YelpDetailDialogFragment extends DialogFragment implements
         mExitButton = (Button) view.findViewById(R.id.b_exit);
         mChooseCategoryButton = (Button) view.findViewById(R.id.b_category);
         mTitleTextView = (TextView) view.findViewById(R.id.tv_poi_item_title);
+        mCategorySwatch = (View) view.findViewById(R.id.v_poi_item_category_swatch);
 
         PointOfInterest poi = BlocspotApplication.getSharedDataSource().getSelectedPOI();
         mTitleTextView.setText(poi.getTitle());

@@ -24,6 +24,7 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
     private static String TEST_GUID = "test_guid";
     private static String TEST_TITLE = "test_title";
     private static String TEST_NOTE = "test_note";
+    private static Boolean TEST_VISITED = true;
     private static float TEST_LATITUDE = 37f;
     private static float TEST_LONGITUDE = -121f;
     private static String TEST_CATEGORY_TITLE = "test_category_title";
@@ -74,6 +75,7 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
                 .setGuid(TEST_GUID)
                 .setTitle(TEST_TITLE)
                 .setNote(TEST_NOTE)
+                .setVisited(TEST_VISITED)
                 .setLatitude(TEST_LATITUDE)
                 .setLongitude(TEST_LONGITUDE);
 
@@ -141,6 +143,9 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
     public void testCreateEmptyPOIHasDefaultNote() {
         assertEquals(PointOfInterest.DEFAULT_NOTE, emptyPOI.getNote());
     }
+    public void testCreateEmptyPOIHasDefaultVisited() {
+        assertEquals(PointOfInterest.DEFAULT_VISITED, emptyPOI.getVisited());
+    }
     public void testCreateEmptyPOIHasDefaultLatitude() {
         assertEquals(PointOfInterest.DEFAULT_LATITUDE, emptyPOI.getLatitude());
     }
@@ -159,6 +164,9 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
     }
     public void testCreatePOIHasTestNote() {
         assertEquals(TEST_NOTE, testPOI.getNote());
+    }
+    public void testCreatePOIHasTestVisited() {
+        assertEquals(TEST_VISITED, testPOI.getVisited());
     }
     public void testCreatePOIHasTestLatitude() {
         assertEquals(TEST_LATITUDE, testPOI.getLatitude());
@@ -183,6 +191,7 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
         assertEquals(emptyPOIRowId, PointOfInterestTable.getRowId(emptyPOICursor));
         assertEquals(PointOfInterest.DEFAULT_TITLE, PointOfInterestTable.getTitle(emptyPOICursor));
         assertEquals(PointOfInterest.DEFAULT_NOTE, PointOfInterestTable.getNote(emptyPOICursor));
+        assertEquals(PointOfInterest.DEFAULT_VISITED, PointOfInterestTable.getVisited(emptyPOICursor));
         assertEquals(PointOfInterest.DEFAULT_LATITUDE, PointOfInterestTable.getLatitude(emptyPOICursor));
         assertEquals(PointOfInterest.DEFAULT_LONGITUDE, PointOfInterestTable.getLongitude(emptyPOICursor));
     }
@@ -190,6 +199,7 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
         assertEquals(emptyPOIRowId, emptyPOIPulled.getRowId());
         assertEquals(PointOfInterest.DEFAULT_TITLE, emptyPOIPulled.getTitle());
         assertEquals(PointOfInterest.DEFAULT_NOTE, emptyPOIPulled.getNote());
+        assertEquals(PointOfInterest.DEFAULT_VISITED, emptyPOIPulled.getVisited());
         assertEquals(PointOfInterest.DEFAULT_LATITUDE, emptyPOIPulled.getLatitude());
         assertEquals(PointOfInterest.DEFAULT_LONGITUDE, emptyPOIPulled.getLongitude());
     }
@@ -204,6 +214,7 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
         assertEquals(testPOIRowId, PointOfInterestTable.getRowId(testPOICursor));
         assertEquals(TEST_TITLE, PointOfInterestTable.getTitle(testPOICursor));
         assertEquals(TEST_NOTE, PointOfInterestTable.getNote(testPOICursor));
+        assertEquals(TEST_VISITED, PointOfInterestTable.getVisited(testPOICursor));
         assertEquals(TEST_LATITUDE, PointOfInterestTable.getLatitude(testPOICursor));
         assertEquals(TEST_LONGITUDE, PointOfInterestTable.getLongitude(testPOICursor));
     }
@@ -211,6 +222,7 @@ public class ApplicationTest extends ApplicationTestCase<BlocspotApplication> {
         assertEquals(testPOIRowId, testPOIPulled.getRowId());
         assertEquals(TEST_TITLE, testPOIPulled.getTitle());
         assertEquals(TEST_NOTE, testPOIPulled.getNote());
+        assertEquals(TEST_VISITED, testPOIPulled.getVisited());
         assertEquals(TEST_LATITUDE, testPOIPulled.getLatitude());
         assertEquals(TEST_LONGITUDE, testPOIPulled.getLongitude());
     }

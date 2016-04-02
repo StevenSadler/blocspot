@@ -1,10 +1,13 @@
 package com.stevensadler.android.blocspot.ui.adapter;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stevensadler.android.blocspot.R;
@@ -20,17 +23,21 @@ import java.util.List;
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemHolder> {
 
     public static interface Delegate {
+        public void onVisitedClicked(PointOfInterest pointOfInterest);
+        public void onDeleteClicked(PointOfInterest pointOfInterest);
         public void onItemClicked(PointOfInterest pointOfInterest);
         public void onItemLongClicked(PointOfInterest pointOfInterest);
     }
 
     private static String TAG = ItemListAdapter.class.getSimpleName();
 
+    private Resources mResources;
     private List<PointOfInterest> mPointsOfInterest;
     private List<Category> mCategories;
     private WeakReference<Delegate> delegate;
 
-    public ItemListAdapter(List<PointOfInterest> pointsOfInterest, List<Category> categories) {
+    public ItemListAdapter(Resources resources, List<PointOfInterest> pointsOfInterest, List<Category> categories) {
+        mResources = resources;
         mPointsOfInterest = pointsOfInterest;
         mCategories = categories;
     }
@@ -79,8 +86,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemHo
             View.OnClickListener,
             View.OnLongClickListener {
 
+        public ImageView poiVisitedImage;
+        public ImageView poiDeleteImage;
         public View poiCategorySwatch;
         public TextView poiTitleTextView;
+        public TextView poiNoteTextView;
 
         private PointOfInterest pointOfInterest;
         private Category category;
@@ -91,7 +101,14 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemHo
             poiTitleTextView.setOnClickListener(this);
             poiTitleTextView.setOnLongClickListener(this);
 
-            poiCategorySwatch = (View) itemView.findViewById(R.id.v_poi_item_category_swatch);
+            poiNoteTextView = (TextView) itemView.findViewById(R.id.tv_poi_item_note);
+            poiCategorySwatch = itemView.findViewById(R.id.v_poi_item_category_swatch);
+
+            poiVisitedImage = (ImageView) itemView.findViewById(R.id.iv_poi_item_visited);
+            poiVisitedImage.setOnClickListener(this);
+
+            poiDeleteImage = (ImageView) itemView.findViewById(R.id.iv_poi_item_delete);
+            poiDeleteImage.setOnClickListener(this);
 
         }
 
@@ -99,15 +116,45 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemHo
             this.pointOfInterest = pointOfInterest;
             this.category = category;
             poiTitleTextView.setText(pointOfInterest.getTitle());
+            if (PointOfInterest.DEFAULT_NOTE.equals(pointOfInterest.getNote())) {
+                poiNoteTextView.setText("");
+            } else {
+                poiNoteTextView.setText(pointOfInterest.getNote());
+            }
+
+            Drawable trashCan = mResources.getDrawable(R.drawable.ic_delete_black_24dp);
+            poiDeleteImage.setImageDrawable(trashCan);
+            poiDeleteImage.setImageAlpha(128);
+
+            Drawable visited = mResources.getDrawable(R.drawable.ic_beenhere_black_24dp);
+            poiVisitedImage.setImageDrawable(visited);
+            if (pointOfInterest.getVisited()) {
+                poiVisitedImage.setImageAlpha(128);
+            } else {
+                poiVisitedImage.setImageAlpha(32);
+            }
             if (category != null) {
                 poiCategorySwatch.setBackgroundColor(category.getColor());
+            } else {
+                poiCategorySwatch.setBackgroundColor(Category.DEFAULT_COLOR);
             }
         }
 
         @Override
         public void onClick(View view) {
             if (getDelegate() != null) {
-                getDelegate().onItemClicked(pointOfInterest);
+                if (view == poiVisitedImage) {
+                    Log.v(TAG, "onClick poiVisitedImage");
+                    getDelegate().onVisitedClicked(pointOfInterest);
+                } else if (view == poiDeleteImage) {
+                    Log.v(TAG, "onClick poiDeleteImage");
+                    getDelegate().onDeleteClicked(pointOfInterest);
+                } else if (view == poiTitleTextView) {
+                    Log.v(TAG, "onClick poiTitleTextView");
+                    getDelegate().onItemClicked(pointOfInterest);
+                } else {
+                    Log.v(TAG, "onClick");
+                }
             }
         }
 

@@ -4,15 +4,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.stevensadler.android.blocspot.ui.fragment.BlocspotMapFragment;
+import com.stevensadler.android.blocspot.ui.fragment.ItemListFragment;
 
 /**
  * Created by Steven on 2/23/2016.
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    private final List<String> mFragmentTitleList = new ArrayList<>();
+
+    private static String TAG = ViewPagerAdapter.class.getSimpleName();
+    public static int NUM_ITEMS = 2;
 
     public ViewPagerAdapter(FragmentManager manager) {
         super(manager);
@@ -20,21 +21,30 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return mFragmentList.get(position);
+        switch (position) {
+            case 0:
+                return ItemListFragment.newInstance(0, "ListPage");
+            case 1:
+                return BlocspotMapFragment.newInstance(1, "MapPage");
+            default:
+                return null;
+        }
     }
 
     @Override
     public int getCount() {
-        return mFragmentList.size();
-    }
-
-    public void addFragment(Fragment fragment, String title) {
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add(title);
+        return NUM_ITEMS;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mFragmentTitleList.get(position);
+        switch (position) {
+            case 0:
+                return "List";
+            case 1:
+                return "Map";
+            default:
+                return null;
+        }
     }
 }
