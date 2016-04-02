@@ -33,7 +33,7 @@ import java.util.Observer;
 public class BlocspotMapFragment extends SupportMapFragment implements
         Observer {
 
-    private static String TAG = BlocspotMapFragment.class.getSimpleName()+" sjs";
+    private static String TAG = BlocspotMapFragment.class.getSimpleName();
 
     private static int DEFAULT_COLOR = 0xff0000;
     private static int DEFAULT_ALPHA = 0x20;
@@ -68,7 +68,6 @@ public class BlocspotMapFragment extends SupportMapFragment implements
         mYelpPointsOfInterest = BlocspotApplication.getSharedDataSource().getYelpPointsOfInterest();
         initMap();
 
-        BlocspotApplication.getSharedDataSource().deleteObservers();
         BlocspotApplication.getSharedDataSource().addObserver(this);
     }
 

@@ -26,7 +26,7 @@ public class ItemListFragment extends Fragment implements
         Observer,
         ItemListAdapter.Delegate {
 
-    private static String TAG = ItemListFragment.class.getSimpleName()+" sjs";
+    private static String TAG = ItemListFragment.class.getSimpleName();
 
     private static List<PointOfInterest> mPointsOfInterest;
     private static List<Category> mCategories;
@@ -58,8 +58,18 @@ public class ItemListFragment extends Fragment implements
         mItemListAdapter = new ItemListAdapter(getResources(), mPointsOfInterest, mCategories);
         mItemListAdapter.setDelegate(this);
 
-        BlocspotApplication.getSharedDataSource().deleteObservers();
         BlocspotApplication.getSharedDataSource().addObserver(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v(TAG, "onDestroyView");
+        Fragment fragment =  getFragmentManager()
+                .findFragmentById(R.id.rv_poi_item_list_fragment);
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 
     @Override
